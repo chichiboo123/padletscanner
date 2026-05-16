@@ -701,9 +701,9 @@
     </div>
 
     <div class="options-row">
-      <label class="checkbox-label" title="로컬 파일 실행 시 CORS 정책 우회를 위해 allorigins.win 프록시를 사용합니다.">
+      <label class="checkbox-label" title="GitHub Pages 등 브라우저에서 실행 시 CORS 정책 우회를 위해 Cloudflare Worker 프록시를 사용합니다.">
         <input type="checkbox" id="use-proxy" checked />
-        CORS 프록시 우회 (allorigins.win) — 로컬·GitHub Pages 실행 시 권장
+        CORS 프록시 우회 (Cloudflare Worker) — 로컬·GitHub Pages 실행 시 권장
       </label>
       <label class="checkbox-label">
         <input type="checkbox" id="show-key" />
@@ -956,19 +956,26 @@ function addDebug(label, data) {
    
    응답 날짜 필드: attributes.createdAt / attributes.updatedAt (camelCase)
    
-   CORS 프록시 모드: allorigins.win/raw 경유
-   (헤더 전달 불가 → api_key 쿼리스트링 사용)
+   CORS 프록시 모드: Cloudflare Worker 경유
+   (X-Api-Key 헤더를 그대로 전달)
+   Worker URL: https://padlet-scanner-proxy.wchisu.workers.dev
 ══════════════════════════════════════════════ */
 async function apiFetch(endpoint, apiKey, useProxy) {
   var BASE = 'https://api.padlet.dev/v1';
+  var PROXY_BASE = 'https://padlet-scanner-proxy.wchisu.workers.dev/proxy/v1';
   var rawUrl = BASE + endpoint;
   var fetchUrl, fetchOpts;
 
   if (useProxy) {
-    var sep = endpoint.includes('?') ? '&' : '?';
-    var urlWithKey = rawUrl + sep + 'api_key=' + encodeURIComponent(apiKey);
-    fetchUrl  = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(urlWithKey);
-    fetchOpts = { method: 'GET' };
+    // Cloudflare Worker 프록시: X-Api-Key 헤더를 그대로 전달
+    fetchUrl  = PROXY_BASE + endpoint;
+    fetchOpts = {
+      method: 'GET',
+      headers: {
+        'X-Api-Key': apiKey,
+        'Accept': 'application/vnd.api+json',
+      }
+    };
   } else {
     fetchUrl  = rawUrl;
     fetchOpts = {
@@ -985,7 +992,7 @@ async function apiFetch(endpoint, apiKey, useProxy) {
     res = await fetch(fetchUrl, fetchOpts);
   } catch (netErr) {
     var hint = useProxy
-      ? 'allorigins 프록시 서버에 접근할 수 없습니다. 인터넷 연결을 확인해주세요.'
+      ? 'Cloudflare Worker 프록시 서버에 접근할 수 없습니다. 인터넷 연결을 확인해주세요.'
       : 'CORS 오류가 발생했을 수 있습니다. "CORS 프록시 우회" 옵션을 활성화해보세요.';
     throw new Error('네트워크 오류: ' + netErr.message + '\n' + hint);
   }
