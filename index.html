@@ -367,7 +367,7 @@
 
     /* ─── 토스트 ─── */
     #toast-container {
-      position: fixed; bottom: 28px; right: 28px;
+      position: fixed; bottom: 28px; left: 28px;
       display: flex; flex-direction: column; gap: 10px;
       z-index: 9999; pointer-events: none;
     }
@@ -392,7 +392,7 @@
 
     /* ─── 관리자 모드 트리거 (우측 하단 호버) ─── */
     #admin-trigger {
-      position: fixed; bottom: 28px; left: 28px;
+      position: fixed; bottom: 28px; right: 28px;
       width: 44px; height: 44px;
       background: transparent;
       border-radius: 50%;
@@ -480,6 +480,94 @@
     .admin-status-bar .material-icons-round { font-size: 16px; }
     .divider { height: 1px; background: var(--border); margin: 20px 0; }
 
+    /* ─── 관리자 전용 대시보드 ─── */
+    #admin-dashboard {
+      display: none;
+    }
+    .admin-dashboard-header {
+      background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%);
+      color: #fff;
+      padding: 18px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      border-radius: var(--radius) var(--radius) 0 0;
+      margin-bottom: 0;
+    }
+    .admin-dashboard-header-left {
+      display: flex; align-items: center; gap: 14px;
+    }
+    .admin-dashboard-header-icon {
+      width: 44px; height: 44px;
+      background: rgba(255,255,255,0.18);
+      border-radius: var(--radius-sm);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px;
+    }
+    .admin-dashboard-header h2 {
+      font-size: 1.15rem; font-weight: 800; letter-spacing: -0.02em;
+      margin: 0;
+    }
+    .admin-dashboard-header p {
+      font-size: 0.78rem; opacity: 0.8; margin: 2px 0 0;
+    }
+    .admin-dashboard-header-right {
+      display: flex; align-items: center; gap: 10px;
+    }
+    .admin-header-btn {
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.25);
+      color: #fff;
+      border-radius: var(--radius-sm);
+      padding: 7px 14px;
+      font-size: 0.82rem; font-weight: 600;
+      cursor: pointer;
+      display: flex; align-items: center; gap: 6px;
+      transition: background 0.18s;
+      font-family: inherit;
+    }
+    .admin-header-btn:hover { background: rgba(255,255,255,0.28); }
+    .admin-header-btn.danger { background: rgba(239,68,68,0.25); border-color: rgba(239,68,68,0.4); }
+    .admin-header-btn.danger:hover { background: rgba(239,68,68,0.4); }
+    .admin-sync-info {
+      font-size: 0.75rem; opacity: 0.75; white-space: nowrap;
+    }
+    .admin-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-top: none;
+      border-radius: 0 0 var(--radius) var(--radius);
+      box-shadow: var(--shadow);
+      padding: 28px 32px;
+      margin-bottom: 20px;
+    }
+    .admin-settings-row {
+      display: flex; align-items: flex-start; gap: 16px;
+      flex-wrap: wrap;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .admin-settings-row:last-child { border-bottom: none; }
+    .admin-settings-label {
+      font-size: 0.78rem; font-weight: 700; color: var(--text-sub);
+      min-width: 120px; padding-top: 10px;
+    }
+    .admin-settings-content { flex: 1; min-width: 200px; }
+    .admin-apikey-display {
+      font-size: 0.82rem; color: var(--text-muted);
+      background: var(--surface-3); border: 1px solid var(--border);
+      border-radius: var(--radius-xs); padding: 8px 12px;
+      font-family: monospace; letter-spacing: 0.05em;
+      word-break: break-all;
+    }
+    .admin-pw-form {
+      display: flex; gap: 8px; flex-wrap: wrap;
+    }
+    .admin-pw-form input {
+      flex: 1; min-width: 140px;
+    }
+
     /* ─── 푸터 ─── */
     .footer {
       text-align: center; padding: 22px 24px 28px;
@@ -493,7 +581,7 @@
       .page-wrap { padding: 28px 16px 48px; }
       .card { padding: 20px 18px; }
       .header-text h1 { font-size: 1.3rem; }
-      #toast-container { right: 14px; bottom: 14px; left: 60px; }
+      #toast-container { left: 14px; bottom: 14px; right: 80px; }
       .toast { max-width: none; }
     }
   </style>
@@ -725,6 +813,197 @@
   </div>
 
 </div><!-- /page-wrap -->
+
+<!-- 관리자 전용 대시보드 (로그인 후 표시) -->
+<div id="admin-dashboard">
+  <div class="page-wrap">
+
+    <!-- 관리자 헤더 배너 -->
+    <div style="margin-bottom:20px;">
+      <div class="admin-dashboard-header">
+        <div class="admin-dashboard-header-left">
+          <div class="admin-dashboard-header-icon">
+            <span class="material-icons-round">admin_panel_settings</span>
+          </div>
+          <div>
+            <h2>관리자 대시보드</h2>
+            <p id="admin-dash-sync-info">저장된 데이터를 불러오는 중...</p>
+          </div>
+        </div>
+        <div class="admin-dashboard-header-right">
+          <span class="admin-sync-info" id="admin-dash-saved-at"></span>
+          <button class="admin-header-btn" onclick="adminDashSync()">
+            <span class="material-icons-round" style="font-size:16px;">sync</span>동기화
+          </button>
+          <button class="admin-header-btn" onclick="adminDashDownloadExcel()">
+            <span class="material-icons-round" style="font-size:16px;">download</span>엑셀
+          </button>
+          <button class="admin-header-btn" onclick="openAdminSettings()">
+            <span class="material-icons-round" style="font-size:16px;">settings</span>설정
+          </button>
+          <button class="admin-header-btn danger" onclick="adminDashLogout()">
+            <span class="material-icons-round" style="font-size:16px;">logout</span>로그아웃
+          </button>
+        </div>
+      </div>
+
+      <!-- 요약 통계 -->
+      <div class="admin-card">
+        <div class="summary-grid">
+          <div class="stat-box">
+            <span class="stat-icon material-icons-round">dashboard</span>
+            <div class="stat-val" id="adm-stat-boards">0</div>
+            <div class="stat-lbl">총 보드 수</div>
+          </div>
+          <div class="stat-box">
+            <span class="stat-icon material-icons-round">post_add</span>
+            <div class="stat-val" id="adm-stat-posts">0</div>
+            <div class="stat-lbl">총 게시글 수</div>
+          </div>
+          <div class="stat-box">
+            <span class="stat-icon material-icons-round">comment</span>
+            <div class="stat-val" id="adm-stat-comments">0</div>
+            <div class="stat-lbl">총 댓글 수</div>
+          </div>
+          <div class="stat-box">
+            <span class="stat-icon material-icons-round">trending_up</span>
+            <div class="stat-val" id="adm-stat-avg">0</div>
+            <div class="stat-lbl">보드당 평균 게시글</div>
+          </div>
+          <div class="stat-box">
+            <span class="stat-icon material-icons-round">public</span>
+            <div class="stat-val" id="adm-stat-public">0</div>
+            <div class="stat-lbl">공개 보드 수</div>
+          </div>
+          <div class="stat-box">
+            <span class="stat-icon material-icons-round">schedule</span>
+            <div class="stat-val" id="adm-stat-date" style="font-size:1.1rem;">—</div>
+            <div class="stat-lbl">최근 수정일</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 관리자 데이터 테이블 -->
+    <div class="card" id="adm-table-section">
+      <div class="table-toolbar">
+        <div class="table-toolbar-left">
+          <div class="table-info">
+            총 <strong id="adm-total-count">0</strong>개 보드
+            <span id="adm-sort-badge" class="sort-badge"></span>
+          </div>
+          <div class="group-control">
+            <span class="material-icons-round" style="font-size:15px;">category</span>
+            묶음:
+            <select id="adm-group-mode" onchange="admOnGroupModeChange()">
+              <option value="year">연도별</option>
+              <option value="keyword-auto">키워드 자동</option>
+              <option value="keyword-manual">키워드 수동</option>
+              <option value="none">묶음 없음</option>
+            </select>
+          </div>
+          <div class="group-keyword-wrap" id="adm-keyword-wrap" style="display:none;">
+            <input type="text" class="group-keyword-input" id="adm-group-keyword"
+              placeholder="묶을 단어 입력 (쉼표로 구분)"
+              oninput="admRenderRows(admGetSorted(adminBoardData))" />
+          </div>
+          <div id="adm-keyword-auto-info" style="display:none;font-size:0.78rem;color:var(--text-sub);padding:4px 8px;background:var(--accent-soft);border-radius:var(--radius-xs);">
+            <span class="material-icons-round" style="font-size:13px;vertical-align:middle;">auto_awesome</span>
+            제목에서 공통 단어를 자동 추출하여 그룹핑합니다.
+          </div>
+        </div>
+        <div class="table-toolbar-right">
+          <span id="adm-sync-info" style="font-size:0.78rem;color:var(--text-muted);"></span>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table id="adm-data-table" aria-label="관리자 패들렛 보드 목록">
+          <thead>
+            <tr>
+              <th class="col-num">#</th>
+              <th class="sortable col-title" data-col="title" onclick="admSortTable('title')">
+                보드 제목 <span class="sort-icon" id="adm-icon-title">⇅</span>
+              </th>
+              <th class="col-desc">설명</th>
+              <th class="sortable col-date" data-col="createdAt" onclick="admSortTable('createdAt')">
+                생성일 <span class="sort-icon" id="adm-icon-createdAt">⇅</span>
+              </th>
+              <th class="sortable col-date" data-col="updatedAt" onclick="admSortTable('updatedAt')">
+                수정일 <span class="sort-icon" id="adm-icon-updatedAt">⇅</span>
+              </th>
+              <th class="sortable col-cnt" data-col="posts" onclick="admSortTable('posts')">
+                게시글 <span class="sort-icon" id="adm-icon-posts">⇅</span>
+              </th>
+              <th class="sortable col-cnt" data-col="comments" onclick="admSortTable('comments')">
+                댓글 <span class="sort-icon" id="adm-icon-comments">⇅</span>
+              </th>
+              <th class="col-vis">공개</th>
+              <th class="col-link">열기</th>
+            </tr>
+          </thead>
+          <tbody id="adm-table-body">
+            <tr><td colspan="9"><div class="empty-state">
+              <span class="material-icons-round">hourglass_empty</span>
+              <p>데이터를 불러오는 중입니다...</p>
+            </div></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div><!-- /page-wrap -->
+</div><!-- /admin-dashboard -->
+
+<!-- 관리자 설정 모달 (비밀번호 변경) -->
+<div class="modal-overlay" id="admin-settings-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">
+        <span class="material-icons-round">settings</span>
+        관리자 설정
+      </div>
+      <button class="modal-close material-icons-round" onclick="closeAdminSettings()">close</button>
+    </div>
+    <!-- API 키 설정 -->
+    <div class="modal-section">
+      <div class="modal-section-title">
+        <span class="material-icons-round" style="font-size:13px;vertical-align:middle;">vpn_key</span>
+        패들렛 API 키 (서버 저장)
+      </div>
+      <input type="password" class="modal-input" id="adm-apikey-input"
+        placeholder="패들렛 API 키를 입력하세요" />
+      <div class="modal-row">
+        <button class="btn btn-primary btn-sm" style="flex:1;" onclick="admSaveKey()">
+          <span class="material-icons-round">save</span>저장
+        </button>
+        <button class="btn btn-sync btn-sm" style="flex:1;" onclick="admSaveAndSync()">
+          <span class="material-icons-round">sync</span>저장 후 동기화
+        </button>
+      </div>
+      <div class="modal-error" id="adm-key-error"></div>
+      <div class="modal-success" id="adm-key-success"></div>
+    </div>
+    <div class="divider"></div>
+    <!-- 비밀번호 변경 -->
+    <div class="modal-section">
+      <div class="modal-section-title">
+        <span class="material-icons-round" style="font-size:13px;vertical-align:middle;">lock</span>
+        비밀번호 변경
+      </div>
+      <input type="password" class="modal-input" id="adm-newpw1"
+        placeholder="새 비밀번호 (4자 이상)" style="margin-bottom:8px;" />
+      <input type="password" class="modal-input" id="adm-newpw2"
+        placeholder="새 비밀번호 확인" />
+      <div class="modal-row">
+        <button class="btn btn-ghost btn-sm" style="flex:1;" onclick="admChangePassword()">
+          <span class="material-icons-round">lock_reset</span>비밀번호 변경
+        </button>
+      </div>
+      <div class="modal-error" id="adm-pw-error"></div>
+      <div class="modal-success" id="adm-pw-success"></div>
+    </div>
+  </div>
+</div>
 
 <!-- 푸터 -->
 <footer class="footer">
@@ -1299,6 +1578,56 @@ async function doFetch(apiKey, useProxy, isSyncMode) {
   }
 }
 
+/* ══════════════════════════════════════════════
+   fetchBoardsData — UI 없이 순수 데이터만 반환 (관리자 동기화용)
+══════════════════════════════════════════════ */
+async function fetchBoardsData(apiKey, useProxy) {
+  var meData = await apiFetch('/me?include=boards', apiKey, useProxy);
+  var boards = extractBoards(meData);
+  if (!boards.length) throw new Error('보드 목록이 비어있습니다.');
+
+  var total=boards.length, completed=0, results=new Array(total);
+  var BATCH=6;
+  for (var i=0; i<total; i+=BATCH) {
+    var slice=boards.slice(i,i+BATCH);
+    await Promise.all(slice.map(async function(board,bi){
+      var idx=i+bi, boardId=board.id;
+      if (!boardId) { results[idx]={board:board,detail:null,error:'board_id 없음'}; completed++; return; }
+      try {
+        var detail=await apiFetch('/boards/'+boardId+'?include=posts,sections,comments',apiKey,useProxy);
+        results[idx]={board:board,detail:detail,error:null};
+      } catch(e) {
+        results[idx]={board:board,detail:null,error:e.message};
+      } finally {
+        completed++;
+        // 관리자 대시보드 진행 상태 업데이트
+        var pct=Math.round((completed/total)*100);
+        var syncInfoEl=document.getElementById('admin-dash-sync-info');
+        if(syncInfoEl) syncInfoEl.textContent=total+'개 보드 분석 중... ('+pct+'% 완료, '+completed+'/'+total+')';
+      }
+    }));
+  }
+
+  return results.map(function(r,idx){
+    var board=r.board, attr=board.attributes||{};
+    var detailAttr=(r.detail&&r.detail.data&&r.detail.data.attributes)?r.detail.data.attributes:{};
+    var counts=extractCounts(r.detail);
+    var createdAt=detailAttr.createdAt||detailAttr.created_at||attr.createdAt||attr.created_at||null;
+    var updatedAt=detailAttr.updatedAt||detailAttr.updated_at||attr.updatedAt||attr.updated_at||null;
+    var title=detailAttr.title||attr.title||attr.name||'(제목 없음) #'+board.id;
+    var description=detailAttr.description||attr.description||'';
+    var boardUrl=extractBoardUrl({id:board.id,attributes:Object.assign({},attr,detailAttr)});
+    var visibility=extractVisibility(detailAttr)||extractVisibility(attr);
+    return {
+      idx:idx+1, id:board.id, title:title, description:description,
+      createdAt:createdAt, updatedAt:updatedAt,
+      posts:counts.postCount, comments:counts.commentCount,
+      url:boardUrl, visibility:visibility,
+      _error:r.error
+    };
+  });
+}
+
 async function fetchBoards() {
   if (isFetching) return;
   var apiKey   = document.getElementById('api-key').value.trim();
@@ -1725,20 +2054,41 @@ function resetAll() {
 }
 
 /* ══════════════════════════════════════════════
-   관리자 모드
+   관리자 모드 — 전용 대시보드
 ══════════════════════════════════════════════ */
+
+// 관리자 전용 상태
+var adminBoardData = [];
+var admSortCol = 'updatedAt';
+var admSortDir = 'desc';
+
+// 일반 화면 / 관리자 화면 전환
+function showNormalView() {
+  document.getElementById('admin-dashboard').style.display = 'none';
+  document.querySelector('.page-wrap').style.display = '';
+  document.querySelector('footer.footer').style.display = '';
+  document.getElementById('admin-trigger').style.display = '';
+}
+function showAdminView() {
+  document.querySelector('.page-wrap').style.display = 'none';
+  document.querySelector('footer.footer').style.display = 'none';
+  document.getElementById('admin-dashboard').style.display = 'block';
+  document.getElementById('admin-trigger').style.display = 'none';
+}
+
 function openAdminModal() {
+  if (adminToken) {
+    closeAdminModal();
+    showAdminView();
+    loadAdminDashboard();
+    return;
+  }
   document.getElementById('admin-modal').classList.add('open');
   document.getElementById('admin-pw-input').value='';
   document.getElementById('admin-login-error').style.display='none';
-  // 이미 토큰 있으면 패널 바로 표시
-  if (adminToken) {
-    showAdminPanel();
-  } else {
-    document.getElementById('admin-login-panel').style.display='block';
-    document.getElementById('admin-panel').style.display='none';
-    setTimeout(function(){ document.getElementById('admin-pw-input').focus(); },100);
-  }
+  document.getElementById('admin-login-panel').style.display='block';
+  document.getElementById('admin-panel').style.display='none';
+  setTimeout(function(){ document.getElementById('admin-pw-input').focus(); },100);
 }
 
 function closeAdminModal() {
@@ -1750,7 +2100,8 @@ async function adminLogin() {
   var errEl=document.getElementById('admin-login-error');
   errEl.style.display='none';
   if (!pw) { errEl.textContent='비밀번호를 입력해주세요.'; errEl.style.display='block'; return; }
-
+  var loginBtn=document.querySelector('#admin-login-panel .btn-primary');
+  if (loginBtn) { loginBtn.disabled=true; }
   try {
     var res=await fetch(WORKER_BASE+'/admin/login',{
       method:'POST',
@@ -1761,8 +2112,9 @@ async function adminLogin() {
     if (data.ok && data.token) {
       adminToken=data.token;
       localStorage.setItem(LS_KEY_ADMIN, adminToken);
-      showAdminPanel();
-      loadAdminKey();
+      closeAdminModal();
+      showAdminView();
+      loadAdminDashboard();
     } else {
       errEl.textContent='비밀번호가 올바르지 않습니다.';
       errEl.style.display='block';
@@ -1770,121 +2122,331 @@ async function adminLogin() {
   } catch(e) {
     errEl.textContent='서버 연결 오류: '+e.message;
     errEl.style.display='block';
+  } finally {
+    if (loginBtn) { loginBtn.disabled=false; }
   }
 }
 
-function showAdminPanel() {
-  document.getElementById('admin-login-panel').style.display='none';
-  document.getElementById('admin-panel').style.display='block';
-}
-
-async function loadAdminKey() {
-  if (!adminToken) return;
+// 관리자 대시보드 데이터 로드 (/admin/get-boards)
+async function loadAdminDashboard() {
+  document.getElementById('admin-dash-sync-info').textContent='서버에서 저장된 데이터를 불러오는 중...';
   try {
-    var res=await fetch(WORKER_BASE+'/admin/get-key',{
-      headers:{'X-Admin-Token':adminToken},
+    var res=await fetch(WORKER_BASE+'/admin/get-boards',{
+      headers:{'X-Admin-Token':adminToken}
     });
+    if (res.status===401) { adminDashLogout(); showToast('warn','세션 만료','다시 로그인해주세요.'); return; }
     var data=await res.json();
-    if (data.ok && data.apiKey) {
-      document.getElementById('admin-apikey-input').value=data.apiKey;
+    if (data.ok && Array.isArray(data.boards) && data.boards.length>0) {
+      adminBoardData=data.boards;
+      admSortCol='updatedAt'; admSortDir='desc';
+      admRenderSummary(adminBoardData);
+      admRenderTable(admGetSorted(adminBoardData));
+      var savedAt=data.savedAt?fmtDate(data.savedAt):'알 수 없음';
+      document.getElementById('admin-dash-sync-info').textContent='데이터 로드 완료 ('+adminBoardData.length+'개 보드)';
+      document.getElementById('admin-dash-saved-at').textContent='마지막 동기화: '+savedAt;
+      document.getElementById('adm-sync-info').textContent='저장: '+savedAt;
+    } else if (data.error==='no_data') {
+      document.getElementById('admin-dash-sync-info').textContent='저장된 데이터가 없습니다. 우측 상단 설정에서 API 키를 저장 후 동기화해주세요.';
+      document.getElementById('adm-table-body').innerHTML='<tr><td colspan="9"><div class="empty-state"><span class="material-icons-round">info</span><p>저장된 보드 데이터가 없습니다.<br>우측 상단 <strong>설정</strong> 버튼에서 API 키를 저장하고 <strong>동기화</strong>를 실행해주세요.</p></div></td></tr>';
+    } else {
+      document.getElementById('admin-dash-sync-info').textContent='데이터 로드 실패: '+(data.error||'알 수 없는 오류');
     }
-  } catch(e) { /* 무시 */ }
+  } catch(e) {
+    document.getElementById('admin-dash-sync-info').textContent='서버 연결 오류: '+e.message;
+  }
 }
 
-async function adminSaveKey() {
-  var apiKey=document.getElementById('admin-apikey-input').value.trim();
-  var errEl=document.getElementById('admin-key-error');
-  var sucEl=document.getElementById('admin-key-success');
+// 관리자 대시보드 동기화 (패들렛 API 새로 호출 후 서버 저장)
+async function adminDashSync() {
+  if (!adminToken) { showToast('warn','세션 만료','다시 로그인해주세요.'); adminDashLogout(); return; }
+  var keyRes=await fetch(WORKER_BASE+'/admin/get-key',{headers:{'X-Admin-Token':adminToken}});
+  var keyData=await keyRes.json();
+  if (!keyData.ok||!keyData.apiKey) {
+    showToast('error','API 키 없음','설정에서 API 키를 먼저 저장해주세요.');
+    openAdminSettings(); return;
+  }
+  var apiKey=keyData.apiKey;
+  document.getElementById('admin-dash-sync-info').textContent='동기화 시작...';
+  showToast('info','관리자 동기화','패들렛 API에서 최신 데이터를 불러오는 중...',3000);
+  try {
+    var result=await fetchBoardsData(apiKey, true);
+    if (result && result.length>0) {
+      adminBoardData=result;
+      admSortCol='updatedAt'; admSortDir='desc';
+      admRenderSummary(adminBoardData);
+      admRenderTable(admGetSorted(adminBoardData));
+      await fetch(WORKER_BASE+'/admin/save-boards',{
+        method:'POST',
+        headers:{'Content-Type':'application/json','X-Admin-Token':adminToken},
+        body:JSON.stringify({boards:adminBoardData})
+      });
+      var now=fmtDate(new Date().toISOString());
+      document.getElementById('admin-dash-sync-info').textContent='동기화 완료 ('+adminBoardData.length+'개 보드)';
+      document.getElementById('admin-dash-saved-at').textContent='마지막 동기화: '+now;
+      document.getElementById('adm-sync-info').textContent='저장: '+now;
+      showToast('success','동기화 완료',adminBoardData.length+'개 보드 데이터가 업데이트되었습니다.');
+    }
+  } catch(e) {
+    document.getElementById('admin-dash-sync-info').textContent='동기화 실패: '+e.message;
+    showToast('error','동기화 실패',e.message);
+  }
+}
+
+// 관리자 로그아웃
+function adminDashLogout() {
+  adminToken=null; adminBoardData=[];
+  localStorage.removeItem(LS_KEY_ADMIN);
+  showNormalView();
+  document.getElementById('admin-login-panel').style.display='block';
+  document.getElementById('admin-panel').style.display='none';
+  showToast('info','로그아웃','관리자 모드에서 로그아웃했습니다.');
+}
+
+// 관리자 설정 모달
+function openAdminSettings() {
+  document.getElementById('admin-settings-modal').classList.add('open');
+  if (adminToken) {
+    fetch(WORKER_BASE+'/admin/get-key',{headers:{'X-Admin-Token':adminToken}})
+      .then(function(r){return r.json();})
+      .then(function(d){if(d.ok&&d.apiKey)document.getElementById('adm-apikey-input').value=d.apiKey;})
+      .catch(function(){});
+  }
+}
+function closeAdminSettings() {
+  document.getElementById('admin-settings-modal').classList.remove('open');
+}
+
+async function admSaveKey() {
+  var apiKey=document.getElementById('adm-apikey-input').value.trim();
+  var errEl=document.getElementById('adm-key-error');
+  var sucEl=document.getElementById('adm-key-success');
   errEl.style.display='none'; sucEl.style.display='none';
-
-  if (!apiKey) { errEl.textContent='API 키를 입력해주세요.'; errEl.style.display='block'; return; }
-  if (!adminToken) { errEl.textContent='로그인이 필요합니다.'; errEl.style.display='block'; return; }
-
+  if (!apiKey){errEl.textContent='API 키를 입력해주세요.';errEl.style.display='block';return false;}
+  if (!adminToken){errEl.textContent='로그인이 필요합니다.';errEl.style.display='block';return false;}
   try {
     var res=await fetch(WORKER_BASE+'/admin/save-key',{
       method:'POST',
       headers:{'Content-Type':'application/json','X-Admin-Token':adminToken},
-      body:JSON.stringify({apiKey:apiKey}),
+      body:JSON.stringify({apiKey:apiKey})
     });
     var data=await res.json();
-    if (data.ok) {
-      sucEl.textContent='API 키가 서버에 저장되었습니다.';
-      sucEl.style.display='block';
-      // 메인 입력창에도 반영
-      document.getElementById('api-key').value=apiKey;
-      saveToStorage();
-    } else {
-      errEl.textContent='저장 실패: '+(data.error||'알 수 없는 오류');
-      errEl.style.display='block';
-    }
-  } catch(e) {
-    errEl.textContent='서버 오류: '+e.message;
-    errEl.style.display='block';
-  }
+    if (data.ok){sucEl.textContent='API 키가 저장되었습니다.';sucEl.style.display='block';return true;}
+    else{errEl.textContent='저장 실패: '+(data.error||'');errEl.style.display='block';return false;}
+  } catch(e){errEl.textContent='오류: '+e.message;errEl.style.display='block';return false;}
 }
 
-async function adminLoadAndSync() {
-  await adminSaveKey();
-  var apiKey=document.getElementById('admin-apikey-input').value.trim();
-  if (!apiKey) return;
-  closeAdminModal();
-  document.getElementById('api-key').value=apiKey;
-  var useProxy=document.getElementById('use-proxy').checked;
-  showToast('info','관리자 동기화 시작','최신 데이터를 불러오는 중입니다...',2500);
-  await doFetch(apiKey, useProxy, boardData.length>0);
-  // 서버에도 캐시 저장
-  if (boardData.length>0 && adminToken) {
-    try {
-      await fetch(WORKER_BASE+'/admin/save-boards',{
-        method:'POST',
-        headers:{'Content-Type':'application/json','X-Admin-Token':adminToken},
-        body:JSON.stringify({boards:boardData}),
-      });
-    } catch(e) { /* 무시 */ }
-  }
+async function admSaveAndSync() {
+  var ok=await admSaveKey();
+  if (!ok) return;
+  closeAdminSettings();
+  await adminDashSync();
 }
 
-async function adminChangePassword() {
-  var pw1=document.getElementById('admin-newpw1').value;
-  var pw2=document.getElementById('admin-newpw2').value;
-  var errEl=document.getElementById('admin-pw-error');
-  var sucEl=document.getElementById('admin-pw-success');
+async function admChangePassword() {
+  var pw1=document.getElementById('adm-newpw1').value;
+  var pw2=document.getElementById('adm-newpw2').value;
+  var errEl=document.getElementById('adm-pw-error');
+  var sucEl=document.getElementById('adm-pw-success');
   errEl.style.display='none'; sucEl.style.display='none';
-
-  if (!pw1||pw1.length<4) { errEl.textContent='비밀번호는 4자 이상이어야 합니다.'; errEl.style.display='block'; return; }
-  if (pw1!==pw2) { errEl.textContent='비밀번호가 일치하지 않습니다.'; errEl.style.display='block'; return; }
-  if (!adminToken) { errEl.textContent='로그인이 필요합니다.'; errEl.style.display='block'; return; }
-
+  if (!pw1||pw1.length<4){errEl.textContent='비밀번호는 4자 이상이어야 합니다.';errEl.style.display='block';return;}
+  if (pw1!==pw2){errEl.textContent='비밀번호가 일치하지 않습니다.';errEl.style.display='block';return;}
+  if (!adminToken){errEl.textContent='로그인이 필요합니다.';errEl.style.display='block';return;}
   try {
     var res=await fetch(WORKER_BASE+'/admin/change-password',{
       method:'POST',
       headers:{'Content-Type':'application/json','X-Admin-Token':adminToken},
-      body:JSON.stringify({newPassword:pw1}),
+      body:JSON.stringify({newPassword:pw1})
     });
     var data=await res.json();
-    if (data.ok) {
-      sucEl.textContent='비밀번호가 변경되었습니다. 다음 로그인부터 새 비밀번호를 사용하세요.';
-      sucEl.style.display='block';
-      document.getElementById('admin-newpw1').value='';
-      document.getElementById('admin-newpw2').value='';
-    } else {
-      errEl.textContent='변경 실패: '+(data.error||'알 수 없는 오류');
-      errEl.style.display='block';
-    }
-  } catch(e) {
-    errEl.textContent='서버 오류: '+e.message;
-    errEl.style.display='block';
-  }
+    if (data.ok){
+      sucEl.textContent='비밀번호가 변경되었습니다.';sucEl.style.display='block';
+      document.getElementById('adm-newpw1').value='';
+      document.getElementById('adm-newpw2').value='';
+    } else{errEl.textContent='변경 실패: '+(data.error||'');errEl.style.display='block';}
+  } catch(e){errEl.textContent='오류: '+e.message;errEl.style.display='block';}
 }
 
-function adminLogout() {
-  adminToken=null;
-  localStorage.removeItem(LS_KEY_ADMIN);
-  document.getElementById('admin-panel').style.display='none';
-  document.getElementById('admin-login-panel').style.display='block';
-  document.getElementById('admin-pw-input').value='';
-  showToast('info','로그아웃','관리자 모드에서 로그아웃했습니다.');
+// 관리자 요약 통계 렌더
+function admRenderSummary(data) {
+  var totalPosts=data.reduce(function(a,b){return a+(b.posts||0);},0);
+  var totalComments=data.reduce(function(a,b){return a+(b.comments||0);},0);
+  var publicCount=data.filter(function(b){return b.visibility==='public';}).length;
+  var latestDate=data.reduce(function(a,b){if(!b.updatedAt)return a;return(!a||b.updatedAt>a)?b.updatedAt:a;},null);
+  document.getElementById('adm-stat-boards').textContent=numFmt(data.length);
+  document.getElementById('adm-stat-posts').textContent=numFmt(totalPosts);
+  document.getElementById('adm-stat-comments').textContent=numFmt(totalComments);
+  document.getElementById('adm-stat-avg').textContent=data.length?numFmt(Math.round(totalPosts/data.length)):'0';
+  document.getElementById('adm-stat-public').textContent=numFmt(publicCount);
+  document.getElementById('adm-stat-date').textContent=latestDate?fmtDateOnly(latestDate):'—';
 }
+
+// 관리자 정렬
+function admGetSorted(data) {
+  var arr=data.slice();
+  arr.sort(function(a,b){
+    var av=a[admSortCol],bv=b[admSortCol];
+    if(av==null&&bv==null)return 0;
+    if(av==null)return 1;if(bv==null)return -1;
+    if(typeof av==='string')return admSortDir==='asc'?av.localeCompare(bv,'ko'):bv.localeCompare(av,'ko');
+    return admSortDir==='asc'?(av-bv):(bv-av);
+  });
+  return arr;
+}
+function admSortTable(col) {
+  if(admSortCol===col)admSortDir=(admSortDir==='asc'?'desc':'asc');
+  else{admSortCol=col;admSortDir='desc';}
+  admUpdateSortIcons();
+  admRenderRows(admGetSorted(adminBoardData));
+  var badge=document.getElementById('adm-sort-badge');
+  badge.style.display='inline-flex';
+  badge.textContent=colLabel(admSortCol)+' '+(admSortDir==='asc'?'▲ 오름차순':'▼ 내림차순');
+}
+function admUpdateSortIcons() {
+  ['title','createdAt','updatedAt','posts','comments'].forEach(function(c){
+    var icon=document.getElementById('adm-icon-'+c);
+    var th=document.querySelector('#adm-data-table th[data-col="'+c+'"]');
+    if(!icon||!th)return;
+    if(c===admSortCol){icon.textContent=admSortDir==='asc'?'▲':'▼';th.classList.add('sort-active');}
+    else{icon.textContent='⇅';th.classList.remove('sort-active');}
+  });
+}
+
+// 관리자 그룹핑 모드
+function admOnGroupModeChange() {
+  var mode=document.getElementById('adm-group-mode').value;
+  document.getElementById('adm-keyword-wrap').style.display=(mode==='keyword-manual')?'flex':'none';
+  document.getElementById('adm-keyword-auto-info').style.display=(mode==='keyword-auto')?'flex':'none';
+  admRenderRows(admGetSorted(adminBoardData));
+}
+function admGetKeywords() {
+  var raw=document.getElementById('adm-group-keyword').value;
+  return raw.split(',').map(function(k){return k.trim();}).filter(function(k){return k.length>0;});
+}
+
+// 관리자 테이블 렌더
+function admRenderTable(data) {
+  document.getElementById('adm-total-count').textContent=data.length;
+  admUpdateSortIcons();
+  admRenderRows(data);
+  var badge=document.getElementById('adm-sort-badge');
+  badge.style.display='inline-flex';
+  badge.textContent=colLabel(admSortCol)+' '+(admSortDir==='asc'?'▲ 오름차순':'▼ 내림차순');
+}
+
+function admRenderRows(sorted) {
+  var mode=document.getElementById('adm-group-mode').value;
+  var tbody=document.getElementById('adm-table-body');
+  if(!sorted||sorted.length===0){
+    tbody.innerHTML='<tr><td colspan="9"><div class="empty-state"><span class="material-icons-round">info</span><p>데이터가 없습니다.</p></div></td></tr>';
+    return;
+  }
+  var groups=[];
+  if(mode==='year'){
+    var yMap={};var yOrder=[];
+    sorted.forEach(function(row){var y=extractYear(row.title)||'__none__';if(!yMap[y]){yMap[y]=[];yOrder.push(y);}yMap[y].push(row);});
+    yOrder.sort(function(a,b){if(a==='__none__')return 1;if(b==='__none__')return -1;return admSortDir==='asc'?a-b:b-a;});
+    yOrder.forEach(function(y){groups.push({label:y==='__none__'?'연도 미분류':y+'년',rows:yMap[y]});});
+  } else if(mode==='keyword-manual'){
+    var keywords=admGetKeywords();
+    if(!keywords.length){groups=[{label:null,rows:sorted}];}
+    else{
+      var kwMap={};keywords.forEach(function(k){kwMap[k]=[];});kwMap['__other__']=[];
+      sorted.forEach(function(row){var m=false;for(var ki=0;ki<keywords.length;ki++){if(row.title&&row.title.indexOf(keywords[ki])!==-1){kwMap[keywords[ki]].push(row);m=true;break;}}if(!m)kwMap['__other__'].push(row);});
+      keywords.forEach(function(kw){if(kwMap[kw].length)groups.push({label:'묶음: '+kw,rows:kwMap[kw]});});
+      if(kwMap['__other__'].length)groups.push({label:'기타',rows:kwMap['__other__']});
+    }
+  } else if(mode==='keyword-auto'){
+    var autoKws=extractAutoKeywords(sorted);
+    if(!autoKws.length){groups=[{label:null,rows:sorted}];}
+    else{
+      var akMap={};autoKws.forEach(function(k){akMap[k]=[];});akMap['__other__']=[];
+      sorted.forEach(function(row){var m=false;autoKws.forEach(function(kw){if(row.title&&row.title.indexOf(kw)!==-1){akMap[kw].push(row);m=true;}});if(!m)akMap['__other__'].push(row);});
+      autoKws.forEach(function(kw){if(akMap[kw].length)groups.push({label:'묶음: '+kw,rows:akMap[kw]});});
+      if(akMap['__other__'].length)groups.push({label:'기타',rows:akMap['__other__']});
+    }
+  } else{groups=[{label:null,rows:sorted}];}
+
+  var html='';var globalNum=1;
+  var groupColors=['#f0f4f9','#f7f9fc'];var gi=0;
+  groups.forEach(function(g){
+    if(g.label){html+='<tr class="group-header"><td colspan="9"><span class="material-icons-round" style="font-size:14px;vertical-align:middle;margin-right:6px;">folder</span>'+esc(g.label)+'<span class="group-count-badge" style="margin-left:8px;">'+g.rows.length+'</span></td></tr>';}
+    var bgEven=groupColors[gi%2];var bgOdd=groupColors[(gi+1)%2];
+    g.rows.forEach(function(row,ri){
+      var bg=ri%2===0?bgEven:bgOdd;
+      var visLabel=row.visibility==='public'?'<span style="color:var(--success);font-size:0.75rem;">&#9679;</span>':row.visibility==='private'?'<span style="color:var(--text-muted);font-size:0.75rem;">&#9679;</span>':'<span style="color:var(--warn);font-size:0.75rem;">&#9679;</span>';
+      var errBadge=row._error?'<span style="color:var(--warn);font-size:0.72rem;margin-left:4px;">&#9888;</span>':'';
+      var postStyle=row.posts>0?'color:var(--accent-dark);font-weight:700;':'';
+      var cmtStyle=row.comments>0?'color:var(--success);font-weight:700;':'';
+      var titleText=row.title?esc(row.title.length>40?row.title.slice(0,40)+'…':row.title):'—';
+      var descText=row.description?esc(row.description.length>30?row.description.slice(0,30)+'…':row.description):'—';
+      html+='<tr style="background:'+bg+';transition:background 0.15s;" onmouseover="this.style.background=\'#e8f0fb\'" onmouseout="this.style.background=\''+bg+'\'">';
+      html+='<td class="col-num" style="text-align:center;color:var(--text-muted);font-size:0.82rem;">'+globalNum+'</td>';
+      html+='<td class="col-title">'+titleText+errBadge+'</td>';
+      html+='<td class="col-desc" style="color:var(--text-sub);font-size:0.82rem;">'+descText+'</td>';
+      html+='<td class="col-date" style="text-align:right;font-size:0.82rem;color:var(--text-sub);">'+fmtDate(row.createdAt)+'</td>';
+      html+='<td class="col-date" style="text-align:right;font-size:0.82rem;color:var(--text-sub);">'+fmtDate(row.updatedAt)+'</td>';
+      html+='<td class="col-cnt" style="text-align:right;'+postStyle+'">'+numFmt(row.posts!=null?row.posts:0)+'</td>';
+      html+='<td class="col-cnt" style="text-align:right;'+cmtStyle+'">'+numFmt(row.comments!=null?row.comments:0)+'</td>';
+      html+='<td class="col-vis" style="text-align:center;">'+visLabel+'</td>';
+      html+='<td class="col-link"><a href="'+(row.url||'#')+'" target="_blank" rel="noopener" class="btn btn-ghost btn-sm" style="font-size:0.78rem;padding:4px 10px;"><span class="material-icons-round" style="font-size:13px;">open_in_new</span>열기</a></td>';
+      html+='</tr>';
+      globalNum++;
+    });
+    gi++;
+  });
+  tbody.innerHTML=html;
+}
+
+// 관리자 엑셀 다운로드
+function adminDashDownloadExcel() {
+  if(!adminBoardData||adminBoardData.length===0){showToast('warn','데이터 없음','먼저 동기화를 실행해주세요.');return;}
+  try {
+    var mode=document.getElementById('adm-group-mode').value;
+    var sorted=admGetSorted(adminBoardData);
+    var rows=[];
+    if(mode==='year'){
+      var yMap2={};var yOrder2=[];
+      sorted.forEach(function(row){var y=extractYear(row.title)||'__none__';if(!yMap2[y]){yMap2[y]=[];yOrder2.push(y);}yMap2[y].push(row);});
+      yOrder2.sort(function(a,b){if(a==='__none__')return 1;if(b==='__none__')return -1;return admSortDir==='asc'?a-b:b-a;});
+      yOrder2.forEach(function(y){rows=rows.concat(yMap2[y]);});
+    } else if(mode==='keyword-manual'){
+      var kws2=admGetKeywords();
+      if(!kws2.length){rows=sorted;}
+      else{
+        var kwG2={};kws2.forEach(function(k){kwG2[k]=[];});kwG2['__other__']=[];
+        sorted.forEach(function(row){var m=false;for(var ki=0;ki<kws2.length;ki++){if(row.title&&row.title.indexOf(kws2[ki])!==-1){kwG2[kws2[ki]].push(row);m=true;break;}}if(!m)kwG2['__other__'].push(row);});
+        kws2.forEach(function(kw){rows=rows.concat(kwG2[kw]);});rows=rows.concat(kwG2['__other__']);
+      }
+    } else if(mode==='keyword-auto'){
+      var autoKws2=extractAutoKeywords(sorted);
+      if(!autoKws2.length){rows=sorted;}
+      else{
+        var akMap2={};autoKws2.forEach(function(k){akMap2[k]=[];});akMap2['__other__']=[];
+        sorted.forEach(function(row){var m=false;autoKws2.forEach(function(kw){if(row.title&&row.title.indexOf(kw)!==-1){akMap2[kw].push(row);m=true;}});if(!m)akMap2['__other__'].push(row);});
+        autoKws2.forEach(function(kw){rows=rows.concat(akMap2[kw]);});rows=rows.concat(akMap2['__other__']);
+      }
+    } else{rows=sorted;}
+    var wsData=[['#','보드 제목','설명','생성일','수정일','게시글 수','댓글 수','공개 여부','바로가기 URL']];
+    rows.forEach(function(r,i){
+      var visLabel=r.visibility==='public'?'공개':r.visibility==='private'?'비공개':r.visibility==='secret'?'링크 공유':r.visibility||'';
+      wsData.push([i+1,r.title||'',r.description||'',r.createdAt?fmtDate(r.createdAt):'',r.updatedAt?fmtDate(r.updatedAt):'',r.posts!=null?r.posts:0,r.comments!=null?r.comments:0,visLabel,r.url||'']);
+    });
+    var wb=XLSX.utils.book_new();
+    var ws=XLSX.utils.aoa_to_sheet(wsData);
+    ws['!cols']=[{wch:6},{wch:42},{wch:28},{wch:20},{wch:20},{wch:12},{wch:12},{wch:12},{wch:55}];
+    XLSX.utils.book_append_sheet(wb,ws,'패들렛 보드 현황');
+    XLSX.writeFile(wb,'패들렛_보드_현황_목록_'+fmtDateFile(new Date())+'.xlsx');
+    showToast('success','엑셀 다운로드 완료',rows.length+'개 보드');
+  } catch(e){showToast('error','엑셀 오류',e.message);}
+}
+
+// 호환성 유지 (기존 모달에서 호출하던 함수들)
+async function adminSaveKey() { return await admSaveKey(); }
+async function adminChangePassword() { return await admChangePassword(); }
+function adminLogout() { adminDashLogout(); }
+function showAdminPanel() {}
+function loadAdminKey() {}
+
 
 /* ══════════════════════════════════════════════
    이벤트 리스너
@@ -1912,22 +2474,29 @@ document.getElementById('show-debug').addEventListener('change', function(){
 document.getElementById('admin-modal').addEventListener('click', function(e){
   if (e.target===this) closeAdminModal();
 });
+// 관리자 설정 모달 외부 클릭 닫기
+document.getElementById('admin-settings-modal').addEventListener('click', function(e){
+  if (e.target===this) closeAdminSettings();
+});
 
 /* ══════════════════════════════════════════════
    초기화: 페이지 로드 시 로컬스토리지 복원
 ══════════════════════════════════════════════ */
 (function init() {
-  // 관리자 토큰 복원 (세션 지속)
+  // 관리자 토큰 복원 → 있으면 자동으로 관리자 대시보드 진입
   var savedToken=localStorage.getItem(LS_KEY_ADMIN);
-  if (savedToken) adminToken=savedToken;
-
-  // 로컬스토리지에서 데이터 복원
-  var restored=loadFromStorage();
-  if (!restored) {
-    // 데이터 없으면 공개 캐시 시도 (관리자가 저장한 데이터)
-    // 관리자가 저장한 서버 캐시는 관리자 토큰 없이 접근 불가
-    // 일반 사용자는 자신의 API 키를 직접 입력하여 사용합니다.
+  if (savedToken) {
+    adminToken=savedToken;
+    // DOM 준비 후 관리자 화면 전환
+    setTimeout(function(){
+      showAdminView();
+      loadAdminDashboard();
+    }, 0);
+    return; // 일반 화면 복원 불필요
   }
+
+  // 일반 사용자: 로컬스토리지에서 데이터 복원
+  loadFromStorage();
 })();
 </script>
 </body>
