@@ -665,7 +665,8 @@
           묶음:
           <select id="group-mode" onchange="onGroupModeChange()">
             <option value="year">연도별</option>
-            <option value="keyword">키워드별</option>
+            <option value="keyword-auto">키워드 자동</option>
+            <option value="keyword-manual">키워드 수동</option>
             <option value="none">묶음 없음</option>
           </select>
         </div>
@@ -674,6 +675,10 @@
           <input type="text" class="group-keyword-input" id="group-keyword"
             placeholder="묶을 단어 입력 (쉼표로 구분)"
             oninput="renderRows(getSorted(boardData))" />
+        </div>
+        <div id="keyword-auto-info" style="display:none;font-size:0.78rem;color:var(--text-sub);padding:4px 8px;background:var(--accent-soft);border-radius:var(--radius-xs);">
+          <span class="material-icons-round" style="font-size:13px;vertical-align:middle;">auto_awesome</span>
+          제목에서 공통 단어를 자동 추출하여 그룹핑합니다. 중복 등장 허용.
         </div>
       </div>
       <div class="table-toolbar-right">
@@ -1371,7 +1376,8 @@ function updateSortIcons() {
 ══════════════════════════════════════════════ */
 function onGroupModeChange() {
   var mode=document.getElementById('group-mode').value;
-  document.getElementById('keyword-wrap').style.display = (mode==='keyword') ? 'flex' : 'none';
+  document.getElementById('keyword-wrap').style.display       = (mode==='keyword-manual') ? 'flex' : 'none';
+  document.getElementById('keyword-auto-info').style.display  = (mode==='keyword-auto')   ? 'flex' : 'none';
   renderRows(getSorted(boardData));
 }
 
@@ -1435,33 +1441,25 @@ function renderRows(data) {
       var rowClass=(gi%2===0)?'row-odd':'row-even';
       rows.forEach(function(row){ html+=buildRow(row,globalIdx,rowClass); globalIdx++; });
     });
-  } else if (mode==='keyword') {
-    // 키워드별 그룹
+  } else if (mode==='keyword-manual') {
+    // 키워드 수동 그룹 — 한 보드는 첫 번째 매칭 키워드 그룹에만 속함
     var keywords=getKeywords();
     if (keywords.length===0) {
       data.forEach(function(row){ html+=buildRow(row,globalIdx,''); globalIdx++; });
     } else {
-      var kwGroups={}, kwOrder=[], assigned=new Set();
-      keywords.forEach(function(kw){
-        kwGroups[kw]=[];
-        kwOrder.push(kw);
-      });
+      var kwGroups={}, kwOrder=[];
+      keywords.forEach(function(kw){ kwGroups[kw]=[]; kwOrder.push(kw); });
       kwGroups['__other__']=[];
-      kwOrder.push('__other__');
-
       data.forEach(function(row){
         var matched=false;
         for (var ki=0; ki<keywords.length; ki++) {
-          var kw=keywords[ki];
-          if (row.title && row.title.indexOf(kw)!==-1) {
-            kwGroups[kw].push(row);
-            matched=true;
-            break;
+          if (row.title && row.title.indexOf(keywords[ki])!==-1) {
+            kwGroups[keywords[ki]].push(row); matched=true; break;
           }
         }
         if (!matched) kwGroups['__other__'].push(row);
       });
-
+      kwOrder.push('__other__');
       kwOrder.forEach(function(kw,gi){
         var rows=kwGroups[kw];
         if (rows.length===0) return;
@@ -1471,9 +1469,64 @@ function renderRows(data) {
         rows.forEach(function(row){ html+=buildRow(row,globalIdx,rowClass); globalIdx++; });
       });
     }
+  } else if (mode==='keyword-auto') {
+    // 키워드 자동 그룹 — 제목에서 공통 단어 자동 추출, 중복 등장 허용
+    var autoKws = extractAutoKeywords(data);
+    if (autoKws.length===0) {
+      data.forEach(function(row){ html+=buildRow(row,globalIdx,''); globalIdx++; });
+    } else {
+      var kwGroups2={}, kwOrder2=[];
+      autoKws.forEach(function(kw){ kwGroups2[kw]=[]; kwOrder2.push(kw); });
+      kwGroups2['__other__']=[];
+      data.forEach(function(row){
+        var matched=false;
+        autoKws.forEach(function(kw){
+          if (row.title && row.title.indexOf(kw)!==-1) {
+            kwGroups2[kw].push(row); matched=true;
+          }
+        });
+        if (!matched) kwGroups2['__other__'].push(row);
+      });
+      kwOrder2.push('__other__');
+      kwOrder2.forEach(function(kw,gi){
+        var rows=kwGroups2[kw];
+        if (rows.length===0) return;
+        var label=kw==='__other__'?'기타 (공통 키워드 없음)':'"'+kw+'" 포함';
+        html+=buildGroupHeader(label, rows.length);
+        var rowClass=(gi%2===0)?'row-odd':'row-even';
+        rows.forEach(function(row){ html+=buildRow(row,globalIdx,rowClass); globalIdx++; });
+      });
+    }
   }
 
   tbody.innerHTML=html;
+}
+
+/* 자동 키워드 추출: 2개 이상의 보드 제목에 등장하는 의미 있는 단어 추출 */
+function extractAutoKeywords(data) {
+  // 불용어 (너무 짧거나 의미 없는 단어)
+  var STOP = new Set(['및','과','와','의','을','를','이','가','은','는','에','에서','로','으로',
+    '그','이','저','것','수','등','들','더','또','또는','그리고','하지만','그러나',
+    '하다','있다','없다','되다','이다','아니다','위한','위해','대한','대해',
+    '프로젝트','활동','수업','학습','교육','수업','학교','선생님','쌤','반','팀',
+    '1','2','3','4','5','6','7','8','9','0','a','b','c']);
+  var freq = {};
+  data.forEach(function(row){
+    if (!row.title) return;
+    // 숫자+한글+영문 단어 추출 (2자 이상)
+    var words = row.title.match(/[가-힣a-zA-Z0-9][가-힣a-zA-Z0-9]*/g) || [];
+    var seen = new Set();
+    words.forEach(function(w){
+      if (w.length < 2) return;
+      if (STOP.has(w)) return;
+      if (!seen.has(w)) { freq[w] = (freq[w]||0)+1; seen.add(w); }
+    });
+  });
+  // 2개 이상 보드에 등장하는 단어만, 빈도 내림차순 정렬, 최대 20개
+  return Object.keys(freq)
+    .filter(function(w){ return freq[w]>=2; })
+    .sort(function(a,b){ return freq[b]-freq[a]; })
+    .slice(0,20);
 }
 
 function buildGroupHeader(label, count) {
@@ -1587,7 +1640,7 @@ function downloadExcel() {
         return parseInt(b,10)-parseInt(a,10);
       });
       groupOrder.forEach(function(key){ rows=rows.concat(groups[key]); });
-    } else if (mode==='keyword') {
+    } else if (mode==='keyword-manual') {
       var keywords=getKeywords();
       if (keywords.length===0) {
         rows=sorted;
@@ -1606,6 +1659,26 @@ function downloadExcel() {
         });
         keywords.forEach(function(kw){ rows=rows.concat(kwGroups[kw]); });
         rows=rows.concat(kwGroups['__other__']);
+      }
+    } else if (mode==='keyword-auto') {
+      var autoKws=extractAutoKeywords(sorted);
+      if (autoKws.length===0) {
+        rows=sorted;
+      } else {
+        var kwGroups2={};
+        autoKws.forEach(function(kw){ kwGroups2[kw]=[]; });
+        kwGroups2['__other__']=[];
+        sorted.forEach(function(row){
+          var matched=false;
+          autoKws.forEach(function(kw){
+            if (row.title&&row.title.indexOf(kw)!==-1) {
+              kwGroups2[kw].push(row); matched=true;
+            }
+          });
+          if (!matched) kwGroups2['__other__'].push(row);
+        });
+        autoKws.forEach(function(kw){ rows=rows.concat(kwGroups2[kw]); });
+        rows=rows.concat(kwGroups2['__other__']);
       }
     }
 
@@ -1852,26 +1925,8 @@ document.getElementById('admin-modal').addEventListener('click', function(e){
   var restored=loadFromStorage();
   if (!restored) {
     // 데이터 없으면 공개 캐시 시도 (관리자가 저장한 데이터)
-    fetch(WORKER_BASE+'/public/boards')
-      .then(function(r){ return r.json(); })
-      .then(function(data){
-        if (data.ok && data.boards && data.boards.length>0) {
-          boardData=data.boards;
-          sortCol='updatedAt'; sortDir='desc';
-          renderTable(getSorted(boardData));
-          renderSummary(boardData);
-          document.getElementById('btn-excel').disabled      =false;
-          document.getElementById('btn-reset').style.display ='inline-flex';
-          var savedAt=data.savedAt?fmtDate(data.savedAt):'알 수 없음';
-          document.getElementById('cache-banner-text').innerHTML=
-            '<strong>관리자가 저장한 데이터</strong>를 불러왔습니다. ('+savedAt+', 총 '+data.boards.length+'개 보드) '+
-            '최신 데이터로 업데이트하려면 <strong>동기화</strong>를 눌러주세요.';
-          document.getElementById('cache-banner').style.display='flex';
-          document.getElementById('sync-info').textContent='서버 캐시: '+savedAt;
-          saveToStorage();
-        }
-      })
-      .catch(function(){});
+    // 관리자가 저장한 서버 캐시는 관리자 토큰 없이 접근 불가
+    // 일반 사용자는 자신의 API 키를 직접 입력하여 사용합니다.
   }
 })();
 </script>
