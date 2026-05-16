@@ -29,7 +29,6 @@
       --accent:       #7c9cbf;
       --accent-soft:  #dde8f3;
       --accent-dark:  #5a7fa8;
-      --accent-hover: #4a6f98;
       --text-main:    #2c2c2c;
       --text-sub:     #7a7570;
       --text-muted:   #b0aaa3;
@@ -50,9 +49,7 @@
       --tr:           0.17s ease;
     }
 
-    /* ─── 리셋 ─── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     html { scroll-behavior: smooth; }
 
     body {
@@ -63,21 +60,16 @@
       min-height: 100vh;
       line-height: 1.6;
       -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
     }
 
-    /* ═══════════════════════════════════════════
-       레이아웃
-    ═══════════════════════════════════════════ */
+    /* ─── 레이아웃 ─── */
     .page-wrap {
       max-width: 1200px;
       margin: 0 auto;
       padding: 44px 24px 96px;
     }
 
-    /* ═══════════════════════════════════════════
-       헤더
-    ═══════════════════════════════════════════ */
+    /* ─── 헤더 ─── */
     .header {
       display: flex;
       align-items: center;
@@ -106,9 +98,7 @@
       margin-top: 4px;
     }
 
-    /* ═══════════════════════════════════════════
-       카드
-    ═══════════════════════════════════════════ */
+    /* ─── 카드 ─── */
     .card {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -126,27 +116,17 @@
       margin-bottom: 18px;
     }
 
-    /* ═══════════════════════════════════════════
-       입력 폼
-    ═══════════════════════════════════════════ */
-    .input-row {
-      display: flex;
-      gap: 14px;
-      align-items: flex-end;
-      flex-wrap: wrap;
-    }
+    /* ─── 입력 폼 ─── */
     .input-group {
-      flex: 1;
-      min-width: 260px;
       display: flex;
       flex-direction: column;
       gap: 7px;
+      margin-bottom: 4px;
     }
     .input-group label {
       font-size: 0.8rem;
       font-weight: 600;
       color: var(--text-sub);
-      letter-spacing: 0.01em;
     }
     .input-group input[type="text"],
     .input-group input[type="password"] {
@@ -160,7 +140,6 @@
       background: var(--surface-2);
       transition: border-color var(--tr), box-shadow var(--tr), background var(--tr);
       outline: none;
-      letter-spacing: 0.01em;
     }
     .input-group input:focus {
       border-color: var(--accent);
@@ -187,7 +166,6 @@
       color: var(--text-sub);
       cursor: pointer;
       user-select: none;
-      transition: color var(--tr);
     }
     .checkbox-label:hover { color: var(--text-main); }
     .checkbox-label input[type="checkbox"] {
@@ -197,9 +175,20 @@
       flex-shrink: 0;
     }
 
-    /* ═══════════════════════════════════════════
-       버튼
-    ═══════════════════════════════════════════ */
+    /* ─── 안내 박스 ─── */
+    .info-box {
+      background: var(--accent-soft);
+      border: 1px solid #c0d8ef;
+      border-radius: var(--radius-sm);
+      padding: 12px 16px;
+      margin-top: 16px;
+      font-size: 0.82rem;
+      color: var(--accent-dark);
+      line-height: 1.65;
+    }
+    .info-box strong { font-weight: 700; }
+
+    /* ─── 버튼 ─── */
     .btn {
       display: inline-flex;
       align-items: center;
@@ -216,7 +205,6 @@
       transition: background var(--tr), transform var(--tr),
                   box-shadow var(--tr), opacity var(--tr);
       white-space: nowrap;
-      letter-spacing: 0.01em;
     }
     .btn:active:not(:disabled) { transform: translateY(1px); }
     .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
@@ -235,10 +223,7 @@
       color: #fff;
       box-shadow: 0 2px 10px rgba(90,158,122,0.30);
     }
-    .btn-success:hover:not(:disabled) {
-      background: #4a8a6a;
-      box-shadow: 0 4px 16px rgba(90,158,122,0.40);
-    }
+    .btn-success:hover:not(:disabled) { background: #4a8a6a; }
     .btn-ghost {
       background: transparent;
       color: var(--text-sub);
@@ -247,7 +232,6 @@
     .btn-ghost:hover:not(:disabled) {
       background: var(--surface-3);
       color: var(--text-main);
-      border-color: var(--border);
     }
 
     .action-row {
@@ -258,9 +242,7 @@
       flex-wrap: wrap;
     }
 
-    /* ═══════════════════════════════════════════
-       에러 박스 (인라인)
-    ═══════════════════════════════════════════ */
+    /* ─── 에러 박스 ─── */
     #error-box {
       display: none;
       background: var(--danger-soft);
@@ -285,9 +267,7 @@
       white-space: pre-line;
     }
 
-    /* ═══════════════════════════════════════════
-       진행 상태 카드
-    ═══════════════════════════════════════════ */
+    /* ─── 진행 상태 ─── */
     #progress-section { display: none; }
 
     .progress-header {
@@ -335,7 +315,6 @@
       min-height: 1.2em;
     }
 
-    /* 스피너 */
     .spinner {
       display: inline-block;
       width: 18px; height: 18px;
@@ -347,9 +326,7 @@
     }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* ═══════════════════════════════════════════
-       요약 통계
-    ═══════════════════════════════════════════ */
+    /* ─── 요약 통계 ─── */
     #summary-section { display: none; }
 
     .summary-grid {
@@ -365,10 +342,7 @@
       text-align: center;
       transition: box-shadow var(--tr), transform var(--tr);
     }
-    .stat-box:hover {
-      box-shadow: var(--shadow);
-      transform: translateY(-1px);
-    }
+    .stat-box:hover { box-shadow: var(--shadow); transform: translateY(-1px); }
     .stat-val {
       font-size: 1.85rem;
       font-weight: 800;
@@ -385,9 +359,7 @@
       text-transform: uppercase;
     }
 
-    /* ═══════════════════════════════════════════
-       데이터 테이블
-    ═══════════════════════════════════════════ */
+    /* ─── 데이터 테이블 ─── */
     #table-section { display: none; }
 
     .table-toolbar {
@@ -398,10 +370,7 @@
       flex-wrap: wrap;
       gap: 10px;
     }
-    .table-info {
-      font-size: 0.84rem;
-      color: var(--text-sub);
-    }
+    .table-info { font-size: 0.84rem; color: var(--text-sub); }
     .table-info strong { color: var(--text-main); font-weight: 700; }
     .sort-badge {
       display: inline-flex;
@@ -424,11 +393,7 @@
       box-shadow: var(--shadow-sm);
     }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.875rem;
-    }
+    table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
     thead tr { background: var(--surface-2); }
     thead th {
       padding: 13px 16px;
@@ -442,18 +407,9 @@
       white-space: nowrap;
       user-select: none;
     }
-    thead th.sortable {
-      cursor: pointer;
-      transition: background var(--tr), color var(--tr);
-    }
-    thead th.sortable:hover {
-      background: var(--accent-soft);
-      color: var(--accent-dark);
-    }
-    thead th.sort-active {
-      color: var(--accent-dark);
-      background: var(--accent-soft);
-    }
+    thead th.sortable { cursor: pointer; transition: background var(--tr), color var(--tr); }
+    thead th.sortable:hover { background: var(--accent-soft); color: var(--accent-dark); }
+    thead th.sort-active { color: var(--accent-dark); background: var(--accent-soft); }
     .sort-icon {
       display: inline-block;
       margin-left: 4px;
@@ -464,33 +420,18 @@
     }
     thead th.sort-active .sort-icon { opacity: 1; }
 
-    /* 컬럼 정렬 */
     th.col-num, td.col-num   { text-align: center; }
     th.col-date, td.col-date { text-align: center; }
     th.col-cnt, td.col-cnt   { text-align: center; }
     th.col-link, td.col-link { text-align: center; }
 
-    tbody tr {
-      border-bottom: 1px solid var(--border);
-      transition: background var(--tr);
-    }
+    tbody tr { border-bottom: 1px solid var(--border); transition: background var(--tr); }
     tbody tr:last-child { border-bottom: none; }
     tbody tr:hover { background: var(--surface-3); }
 
-    tbody td {
-      padding: 12px 16px;
-      color: var(--text-main);
-      vertical-align: middle;
-    }
-    td.col-num {
-      color: var(--text-muted);
-      font-size: 0.8rem;
-      font-variant-numeric: tabular-nums;
-    }
-    td.col-title {
-      font-weight: 500;
-      max-width: 280px;
-    }
+    tbody td { padding: 12px 16px; color: var(--text-main); vertical-align: middle; }
+    td.col-num { color: var(--text-muted); font-size: 0.8rem; font-variant-numeric: tabular-nums; }
+    td.col-title { font-weight: 500; max-width: 280px; }
     td.col-title .title-inner {
       display: block;
       overflow: hidden;
@@ -498,17 +439,8 @@
       white-space: nowrap;
       max-width: 260px;
     }
-    td.col-date {
-      font-size: 0.82rem;
-      color: var(--text-sub);
-      font-variant-numeric: tabular-nums;
-      white-space: nowrap;
-    }
-    td.col-cnt {
-      font-weight: 700;
-      font-variant-numeric: tabular-nums;
-      font-size: 0.9rem;
-    }
+    td.col-date { font-size: 0.82rem; color: var(--text-sub); font-variant-numeric: tabular-nums; white-space: nowrap; }
+    td.col-cnt { font-weight: 700; font-variant-numeric: tabular-nums; font-size: 0.9rem; }
     td.col-cnt.posts    { color: var(--accent-dark); }
     td.col-cnt.comments { color: var(--success); }
 
@@ -538,35 +470,35 @@
       text-decoration: none;
       font-size: 0.78rem;
       font-weight: 700;
-      transition: background var(--tr), color var(--tr), box-shadow var(--tr);
+      transition: background var(--tr), color var(--tr);
       white-space: nowrap;
     }
-    .link-btn:hover {
-      background: var(--accent);
-      color: #fff;
-      box-shadow: 0 2px 8px rgba(124,156,191,0.35);
-    }
+    .link-btn:hover { background: var(--accent); color: #fff; }
     .link-btn svg { width: 11px; height: 11px; flex-shrink: 0; }
 
-    /* 빈 상태 */
-    .empty-state {
-      text-align: center;
-      padding: 52px 24px;
-      color: var(--text-muted);
-    }
-    .empty-state svg {
-      width: 44px; height: 44px;
-      margin-bottom: 14px;
-      opacity: 0.3;
-      display: block;
-      margin-left: auto;
-      margin-right: auto;
-    }
+    .empty-state { text-align: center; padding: 52px 24px; color: var(--text-muted); }
+    .empty-state svg { width: 44px; height: 44px; margin: 0 auto 14px; opacity: 0.3; display: block; }
     .empty-state p { font-size: 0.88rem; line-height: 1.7; }
 
-    /* ═══════════════════════════════════════════
-       토스트 알림
-    ═══════════════════════════════════════════ */
+    /* ─── 디버그 패널 ─── */
+    #debug-section { display: none; }
+    .debug-box {
+      background: #1e1e2e;
+      border-radius: var(--radius-sm);
+      padding: 16px;
+      overflow-x: auto;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+    .debug-box pre {
+      font-family: 'Fira Code', 'Consolas', monospace;
+      font-size: 0.78rem;
+      color: #cdd6f4;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+
+    /* ─── 토스트 ─── */
     #toast-container {
       position: fixed;
       bottom: 28px;
@@ -585,7 +517,7 @@
       border-radius: var(--radius-sm);
       box-shadow: var(--shadow-md);
       font-size: 0.875rem;
-      max-width: 400px;
+      max-width: 420px;
       pointer-events: all;
       animation: toastIn 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
@@ -605,18 +537,14 @@
       background: none; border: none; cursor: pointer;
       opacity: 0.45; font-size: 0.95rem; padding: 0; line-height: 1;
       color: inherit; flex-shrink: 0; margin-top: 1px;
-      transition: opacity var(--tr);
     }
     .toast-close:hover { opacity: 1; }
 
-    /* ═══════════════════════════════════════════
-       반응형
-    ═══════════════════════════════════════════ */
+    /* ─── 반응형 ─── */
     @media (max-width: 680px) {
       .page-wrap { padding: 28px 16px 72px; }
       .card { padding: 20px 18px; }
       .header-text h1 { font-size: 1.3rem; }
-      .input-row { flex-direction: column; }
       #toast-container { right: 14px; bottom: 14px; left: 14px; }
       .toast { max-width: none; }
     }
@@ -626,10 +554,9 @@
 
 <div class="page-wrap">
 
-  <!-- ══ 헤더 ══ -->
+  <!-- 헤더 -->
   <div class="header">
     <div class="header-icon">
-      <!-- 패들렛 스타일 아이콘 -->
       <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
         <path d="M4 4h16v2H4V4zm0 4h10v2H4V8zm0 4h16v2H4v-2zm0 4h10v2H4v-2z"/>
       </svg>
@@ -640,32 +567,42 @@
     </div>
   </div>
 
-  <!-- ══ API 설정 카드 ══ -->
+  <!-- API 설정 카드 -->
   <div class="card">
     <div class="card-title">API 연결 설정</div>
 
-    <div class="input-row">
-      <div class="input-group">
-        <label for="api-key">패들렛 API v1 키</label>
-        <input
-          type="password"
-          id="api-key"
-          placeholder="패들렛 계정 설정 → 개발자 API에서 발급한 키를 입력하세요"
-          autocomplete="off"
-          spellcheck="false"
-        />
-      </div>
+    <div class="input-group">
+      <label for="api-key">패들렛 API v1 키</label>
+      <input
+        type="password"
+        id="api-key"
+        placeholder="패들렛 계정 설정 → 개발자 API에서 발급한 키를 입력하세요"
+        autocomplete="off"
+        spellcheck="false"
+      />
     </div>
 
     <div class="options-row">
-      <label class="checkbox-label" title="로컬 파일로 실행 시 브라우저 CORS 정책을 우회합니다. allorigins.win 프록시를 경유합니다.">
+      <label class="checkbox-label" title="로컬 파일 실행 시 CORS 정책 우회를 위해 allorigins.win 프록시를 사용합니다.">
         <input type="checkbox" id="use-proxy" checked />
-        CORS 프록시 우회 사용 (allorigins.win) — 로컬 실행 시 권장
+        CORS 프록시 우회 (allorigins.win) — 로컬·GitHub Pages 실행 시 권장
       </label>
       <label class="checkbox-label">
         <input type="checkbox" id="show-key" />
         API 키 표시
       </label>
+      <label class="checkbox-label">
+        <input type="checkbox" id="show-debug" />
+        API 응답 디버그 표시
+      </label>
+    </div>
+
+    <div class="info-box">
+      <strong>📌 사용 안내:</strong>
+      패들렛 API는 <strong>유료 구독</strong> 계정에서만 사용 가능합니다.
+      API 키는 <strong>padlet.com → 계정 설정 → 개발자 API</strong>에서 발급하세요.
+      보드 상세 조회(게시글·댓글 수)는 <strong>본인이 Admin인 보드</strong>만 가능합니다.
+      Admin이 아닌 보드는 404 오류가 발생하며 해당 보드는 0으로 표시됩니다.
     </div>
 
     <div class="action-row">
@@ -699,7 +636,7 @@
     </div>
   </div>
 
-  <!-- ══ 진행 상태 카드 ══ -->
+  <!-- 진행 상태 카드 -->
   <div class="card" id="progress-section">
     <div class="card-title" style="margin-bottom:14px;">분석 진행 상황</div>
     <div class="progress-header">
@@ -715,7 +652,15 @@
     <div class="progress-detail" id="progress-detail">&nbsp;</div>
   </div>
 
-  <!-- ══ 요약 통계 카드 ══ -->
+  <!-- 디버그 패널 -->
+  <div class="card" id="debug-section">
+    <div class="card-title">API 응답 디버그</div>
+    <div class="debug-box">
+      <pre id="debug-content">API 응답이 여기에 표시됩니다.</pre>
+    </div>
+  </div>
+
+  <!-- 요약 통계 카드 -->
   <div class="card" id="summary-section">
     <div class="card-title">분석 요약</div>
     <div class="summary-grid">
@@ -742,7 +687,7 @@
     </div>
   </div>
 
-  <!-- ══ 데이터 테이블 카드 ══ -->
+  <!-- 데이터 테이블 카드 -->
   <div class="card" id="table-section">
     <div class="table-toolbar">
       <div class="table-info">
@@ -791,49 +736,43 @@
 
 </div><!-- /page-wrap -->
 
-<!-- ══ 토스트 컨테이너 ══ -->
+<!-- 토스트 컨테이너 -->
 <div id="toast-container" role="region" aria-label="알림"></div>
 
-<!-- ══════════════════════════════════════════════
-     JavaScript
-══════════════════════════════════════════════ -->
 <script>
 'use strict';
 
 /* ─── 전역 상태 ─── */
-let boardData  = [];
-let sortCol    = 'updated_at';
-let sortDir    = 'desc';
-let isFetching = false;
+var boardData  = [];
+var sortCol    = 'updated_at';
+var sortDir    = 'desc';
+var isFetching = false;
+var debugLog   = [];
 
 /* ══════════════════════════════════════════════
-   유틸리티 함수
+   유틸리티
 ══════════════════════════════════════════════ */
-
-/** ISO 날짜 → 'YYYY-MM-DD HH:mm' */
 function fmtDate(iso) {
   if (!iso) return '—';
   try {
-    const d = new Date(iso);
+    var d = new Date(iso);
     if (isNaN(d.getTime())) return String(iso);
-    const p = n => String(n).padStart(2, '0');
-    return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`;
-  } catch { return String(iso); }
+    var p = function(n) { return String(n).padStart(2, '0'); };
+    return d.getFullYear() + '-' + p(d.getMonth()+1) + '-' + p(d.getDate()) +
+           ' ' + p(d.getHours()) + ':' + p(d.getMinutes());
+  } catch(e) { return String(iso); }
 }
 
-/** Date → 'YYYYMMDD' (파일명용) */
 function fmtDateFile(d) {
-  const p = n => String(n).padStart(2, '0');
-  return `${d.getFullYear()}${p(d.getMonth()+1)}${p(d.getDate())}`;
+  var p = function(n) { return String(n).padStart(2, '0'); };
+  return d.getFullYear() + '' + p(d.getMonth()+1) + '' + p(d.getDate());
 }
 
-/** 숫자 → 한국식 천단위 콤마 */
 function numFmt(n) {
   if (n == null) return '0';
   return Number(n).toLocaleString('ko-KR');
 }
 
-/** HTML 이스케이프 */
 function esc(s) {
   if (s == null) return '';
   return String(s)
@@ -843,209 +782,238 @@ function esc(s) {
     .replace(/"/g, '&quot;');
 }
 
+function addDebug(label, data) {
+  debugLog.push({ label: label, data: data });
+  if (document.getElementById('show-debug').checked) {
+    document.getElementById('debug-section').style.display = 'block';
+    var content = debugLog.map(function(d) {
+      return '=== ' + d.label + ' ===\n' + JSON.stringify(d.data, null, 2);
+    }).join('\n\n');
+    document.getElementById('debug-content').textContent = content;
+  }
+}
+
 /* ══════════════════════════════════════════════
-   API 호출 래퍼
+   API 호출
+   
+   공식 패들렛 API v1 엔드포인트:
+   - GET /v1/me?include=boards
+     → 현재 사용자 정보 + 보드 목록
+     → 헤더: X-Api-Key
+     → Accept: application/vnd.api+json
+   
+   - GET /v1/boards/{board_id}?include=posts,sections,comments
+     → 보드 상세 (게시글·댓글 포함)
+     → board_id: 16~22자 문자열
+   
+   CORS 프록시 모드: allorigins.win/raw 경유
+   (헤더 전달 불가 → api_key 쿼리스트링 사용)
 ══════════════════════════════════════════════ */
 async function apiFetch(endpoint, apiKey, useProxy) {
-  const BASE = 'https://api.padlet.dev/v1';
-  const rawUrl = BASE + endpoint;
-
-  let fetchUrl, fetchOpts;
+  var BASE = 'https://api.padlet.dev/v1';
+  var rawUrl = BASE + endpoint;
+  var fetchUrl, fetchOpts;
 
   if (useProxy) {
-    /* allorigins는 요청 헤더를 전달할 수 없으므로
-       패들렛 API의 쿼리스트링 인증 방식 활용 */
-    const sep = endpoint.includes('?') ? '&' : '?';
-    const urlWithKey = rawUrl + sep + 'api_key=' + encodeURIComponent(apiKey);
+    /* allorigins는 커스텀 헤더를 전달할 수 없으므로 api_key 쿼리스트링 사용 */
+    var sep = endpoint.includes('?') ? '&' : '?';
+    var urlWithKey = rawUrl + sep + 'api_key=' + encodeURIComponent(apiKey);
     fetchUrl  = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(urlWithKey);
     fetchOpts = { method: 'GET' };
   } else {
+    /* 직접 호출: 공식 문서 기준 X-Api-Key 헤더 */
     fetchUrl  = rawUrl;
     fetchOpts = {
       method: 'GET',
       headers: {
         'X-Api-Key': apiKey,
-        'Accept':    'application/json',
+        'Accept': 'application/vnd.api+json',
       }
     };
   }
 
-  let res;
+  var res;
   try {
     res = await fetch(fetchUrl, fetchOpts);
   } catch (netErr) {
-    throw new Error(
-      `네트워크 오류: ${netErr.message}\n` +
-      (useProxy
-        ? 'allorigins 프록시 서버에 접근할 수 없습니다. 인터넷 연결을 확인해주세요.'
-        : 'CORS 오류가 발생했을 수 있습니다. "CORS 프록시 우회 사용" 옵션을 활성화해보세요.')
-    );
+    var hint = useProxy
+      ? 'allorigins 프록시 서버에 접근할 수 없습니다. 인터넷 연결을 확인해주세요.'
+      : 'CORS 오류가 발생했을 수 있습니다. "CORS 프록시 우회" 옵션을 활성화해보세요.';
+    throw new Error('네트워크 오류: ' + netErr.message + '\n' + hint);
   }
 
   if (!res.ok) {
-    let body = '';
-    try { body = await res.text(); } catch {}
-
-    const errMap = {
-      400: '잘못된 요청입니다. API 키 또는 요청 형식을 확인해주세요. (400 Bad Request)',
-      401: 'API 키가 올바르지 않거나 만료되었습니다.\n패들렛 계정 설정 → 개발자 API에서 키를 재확인해주세요. (401 Unauthorized)',
-      403: '해당 리소스에 접근 권한이 없습니다.\nAPI 키의 권한 범위를 확인해주세요. (403 Forbidden)',
-      404: '요청한 리소스를 찾을 수 없습니다. (404 Not Found)',
-      429: 'API 요청 한도를 초과했습니다. 잠시 후 다시 시도해주세요. (429 Too Many Requests)',
-      500: '패들렛 서버 내부 오류가 발생했습니다. 잠시 후 다시 시도해주세요. (500 Internal Server Error)',
-      502: '패들렛 서버 게이트웨이 오류입니다. (502 Bad Gateway)',
-      503: '패들렛 서비스가 일시적으로 이용 불가합니다. (503 Service Unavailable)',
+    var body = '';
+    try { body = await res.text(); } catch(e) {}
+    var errMap = {
+      400: '잘못된 요청입니다. (400 Bad Request)\n요청 파라미터를 확인해주세요.',
+      401: 'API 키가 올바르지 않거나 만료되었습니다. (401 Unauthorized)\n패들렛 계정 설정 → 개발자 API에서 키를 재확인해주세요.',
+      403: '접근 권한이 없습니다. (403 Forbidden)\nAPI 키의 권한 범위를 확인해주세요.',
+      404: '리소스를 찾을 수 없습니다. (404 Not Found)\n해당 보드의 Admin 권한이 없거나 보드가 존재하지 않습니다.',
+      429: 'API 요청 한도 초과. (429 Too Many Requests)\n잠시 후 다시 시도해주세요.',
+      500: '패들렛 서버 오류. (500 Internal Server Error)\n잠시 후 다시 시도해주세요.',
     };
-    const msg = errMap[res.status] || `HTTP ${res.status} 오류가 발생했습니다.`;
-    const detail = body ? `\n[서버 응답] ${body.slice(0, 300)}` : '';
-    throw new Error(msg + detail);
+    var msg = errMap[res.status] || ('HTTP ' + res.status + ' 오류');
+    if (body) msg += '\n[응답] ' + body.slice(0, 300);
+    throw new Error(msg);
   }
 
-  let json;
+  var json;
   try {
     json = await res.json();
-  } catch (parseErr) {
-    throw new Error(`응답 파싱 오류: 서버가 유효하지 않은 JSON을 반환했습니다.\n${parseErr.message}`);
+  } catch(parseErr) {
+    throw new Error('응답 파싱 오류: 서버가 유효하지 않은 JSON을 반환했습니다.\n' + parseErr.message);
   }
   return json;
 }
 
 /* ══════════════════════════════════════════════
-   진행 상태 업데이트
+   JSON:API 응답 파싱 헬퍼
+   
+   /me?include=boards 응답 구조 (JSON:API 스펙):
+   {
+     "data": {
+       "type": "user",
+       "id": "...",
+       "relationships": {
+         "boards": { "data": [{ "type": "board", "id": "abc" }, ...] }
+       }
+     },
+     "included": [
+       { "type": "board", "id": "abc", "attributes": { "title": "...", ... } },
+       ...
+     ]
+   }
 ══════════════════════════════════════════════ */
-function setProgress(pct, label, detail) {
-  const clampedPct = Math.max(0, Math.min(100, pct));
-  document.getElementById('progress-bar').style.width = clampedPct + '%';
-  document.getElementById('progress-pct').textContent = Math.round(clampedPct) + '%';
-  if (label  != null) document.getElementById('progress-label-text').textContent = label;
-  if (detail != null) document.getElementById('progress-detail').textContent     = detail || '\u00a0';
-}
-
-function setProgressDone() {
-  document.getElementById('progress-spinner').style.display = 'none';
-}
-
-/* ══════════════════════════════════════════════
-   에러 표시
-══════════════════════════════════════════════ */
-function showError(title, msg) {
-  const box = document.getElementById('error-box');
-  document.getElementById('error-title-text').textContent = title;
-  document.getElementById('error-msg-text').textContent   = msg;
-  box.style.display = 'block';
-  showToast('error', title, msg.slice(0, 160));
-}
-
-function hideError() {
-  document.getElementById('error-box').style.display = 'none';
-}
-
-/* ══════════════════════════════════════════════
-   토스트 알림
-══════════════════════════════════════════════ */
-function showToast(type, title, msg, duration) {
-  if (duration === undefined) duration = 5500;
-  const icons = { error: '⚠️', success: '✅', info: 'ℹ️', warn: '⚡' };
-  const container = document.getElementById('toast-container');
-  const t = document.createElement('div');
-  t.className = 'toast ' + type;
-  t.setAttribute('role', 'alert');
-  t.innerHTML =
-    '<div class="toast-icon">' + (icons[type] || 'ℹ️') + '</div>' +
-    '<div class="toast-body">' +
-      '<div class="toast-title">' + esc(title) + '</div>' +
-      '<div class="toast-msg">'   + esc(msg)   + '</div>' +
-    '</div>' +
-    '<button class="toast-close" aria-label="닫기" onclick="this.parentElement.remove()">✕</button>';
-  container.appendChild(t);
-  if (duration > 0) {
-    setTimeout(function() {
-      t.style.opacity   = '0';
-      t.style.transform = 'translateY(8px)';
-      t.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
-      setTimeout(function() { if (t.parentElement) t.remove(); }, 320);
-    }, duration);
-  }
-}
-
-/* ══════════════════════════════════════════════
-   패들렛 JSON:API 응답 파싱 헬퍼
-══════════════════════════════════════════════ */
-
-/** 보드 목록 추출 - 다양한 응답 구조 대응 */
 function extractBoards(meData) {
-  // 1) included 배열에서 board 타입 추출 (JSON:API 표준)
+  var boards = [];
+
+  /* 방법 1: included 배열에서 board 타입 추출 (JSON:API 표준) */
   if (meData.included && Array.isArray(meData.included)) {
-    const boards = meData.included.filter(function(item) { return item.type === 'board'; });
-    if (boards.length > 0) return boards;
+    boards = meData.included.filter(function(item) {
+      return item && item.type === 'board';
+    });
+    if (boards.length > 0) {
+      addDebug('보드 추출 방법', 'included 배열에서 ' + boards.length + '개 추출');
+      return boards;
+    }
   }
 
-  // 2) data가 배열인 경우
+  /* 방법 2: data가 배열인 경우 */
   if (Array.isArray(meData.data)) {
-    return meData.data;
+    boards = meData.data.filter(function(item) {
+      return item && (item.type === 'board' || item.id);
+    });
+    if (boards.length > 0) {
+      addDebug('보드 추출 방법', 'data 배열에서 ' + boards.length + '개 추출');
+      return boards;
+    }
   }
 
-  // 3) data.relationships.boards
-  if (meData.data && meData.data.relationships && meData.data.relationships.boards) {
-    const refs = meData.data.relationships.boards.data || [];
-    return refs.map(function(r) { return { id: r.id, type: 'board', attributes: {} }; });
+  /* 방법 3: data.relationships.boards.data 에서 ID 추출 후 included 매핑 */
+  if (meData.data && meData.data.relationships) {
+    var rel = meData.data.relationships;
+    if (rel.boards && rel.boards.data && Array.isArray(rel.boards.data)) {
+      var refs = rel.boards.data;
+      /* included가 있으면 매핑, 없으면 ID만 */
+      boards = refs.map(function(r) {
+        if (meData.included) {
+          var found = meData.included.find(function(inc) {
+            return inc.type === 'board' && inc.id === r.id;
+          });
+          if (found) return found;
+        }
+        return { id: r.id, type: 'board', attributes: {} };
+      });
+      if (boards.length > 0) {
+        addDebug('보드 추출 방법', 'relationships에서 ' + boards.length + '개 추출');
+        return boards;
+      }
+    }
   }
 
-  // 4) 최상위 boards 키
+  /* 방법 4: 최상위 boards 키 (비표준 응답) */
   if (meData.boards && Array.isArray(meData.boards)) {
+    addDebug('보드 추출 방법', 'boards 키에서 ' + meData.boards.length + '개 추출');
     return meData.boards;
   }
 
+  addDebug('보드 추출 실패', '알 수 없는 응답 구조');
   return [];
 }
 
-/** 보드 상세에서 게시글/댓글 수 추출 */
+/*
+   /boards/{id}?include=posts,sections,comments 응답:
+   {
+     "data": {
+       "type": "board", "id": "...",
+       "attributes": { "title": "...", "created_at": "...", "updated_at": "...", ... },
+       "relationships": {
+         "posts":    { "data": [{ "type": "post",    "id": "..." }, ...] },
+         "comments": { "data": [{ "type": "comment", "id": "..." }, ...] }
+       }
+     },
+     "included": [
+       { "type": "post",    "id": "...", ... },
+       { "type": "comment", "id": "...", ... },
+       ...
+     ]
+   }
+*/
 function extractCounts(detail) {
-  var postCount = 0, commentCount = 0;
   if (!detail) return { postCount: 0, commentCount: 0 };
 
-  // A) included 배열에서 타입별 카운트
+  var postCount = 0, commentCount = 0;
+
+  /* 방법 A: included 배열에서 타입별 카운트 (가장 정확) */
   if (detail.included && Array.isArray(detail.included)) {
     detail.included.forEach(function(item) {
+      if (!item) return;
       if (item.type === 'post')    postCount++;
       if (item.type === 'comment') commentCount++;
     });
-    if (postCount > 0 || commentCount > 0) return { postCount: postCount, commentCount: commentCount };
-  }
-
-  // B) data.attributes의 카운트 필드
-  if (detail.data && detail.data.attributes) {
-    var a = detail.data.attributes;
-    var pc = a.post_count    != null ? a.post_count    :
-             a.posts_count   != null ? a.posts_count   :
-             a.posts         != null ? a.posts         : null;
-    var cc = a.comment_count  != null ? a.comment_count  :
-             a.comments_count != null ? a.comments_count :
-             a.comments       != null ? a.comments       : null;
-    if (pc != null || cc != null) {
-      return { postCount: pc || 0, commentCount: cc || 0 };
+    /* included에 데이터가 있으면 신뢰 */
+    if (postCount > 0 || commentCount > 0) {
+      return { postCount: postCount, commentCount: commentCount };
     }
   }
 
-  // C) data.meta의 카운트 필드
+  /* 방법 B: data.relationships에서 배열 길이 */
+  if (detail.data && detail.data.relationships) {
+    var rel = detail.data.relationships;
+    var pc = 0, cc = 0;
+    if (rel.posts    && rel.posts.data    && Array.isArray(rel.posts.data))    pc = rel.posts.data.length;
+    if (rel.comments && rel.comments.data && Array.isArray(rel.comments.data)) cc = rel.comments.data.length;
+    if (pc > 0 || cc > 0) {
+      return { postCount: pc, commentCount: cc };
+    }
+  }
+
+  /* 방법 C: data.attributes에서 카운트 필드 */
+  if (detail.data && detail.data.attributes) {
+    var a = detail.data.attributes;
+    var attrPc = a.post_count    != null ? a.post_count    :
+                 a.posts_count   != null ? a.posts_count   :
+                 a.posts         != null ? a.posts         : null;
+    var attrCc = a.comment_count  != null ? a.comment_count  :
+                 a.comments_count != null ? a.comments_count :
+                 a.comments       != null ? a.comments       : null;
+    if (attrPc != null || attrCc != null) {
+      return { postCount: Number(attrPc) || 0, commentCount: Number(attrCc) || 0 };
+    }
+  }
+
+  /* 방법 D: data.meta */
   if (detail.data && detail.data.meta) {
     var m = detail.data.meta;
     if (m.post_count != null || m.comment_count != null) {
-      return { postCount: m.post_count || 0, commentCount: m.comment_count || 0 };
+      return { postCount: Number(m.post_count) || 0, commentCount: Number(m.comment_count) || 0 };
     }
   }
 
-  // D) data.relationships 배열 길이
-  if (detail.data && detail.data.relationships) {
-    var rel = detail.data.relationships;
-    if (rel.posts    && rel.posts.data)    postCount    = rel.posts.data.length;
-    if (rel.comments && rel.comments.data) commentCount = rel.comments.data.length;
-  }
-
-  return { postCount: postCount, commentCount: commentCount };
+  return { postCount: 0, commentCount: 0 };
 }
 
-/** 보드 속성에서 URL 추출 */
 function extractBoardUrl(board) {
   var a = board.attributes || {};
   if (a.url)      return a.url;
@@ -1056,16 +1024,70 @@ function extractBoardUrl(board) {
 }
 
 /* ══════════════════════════════════════════════
+   진행 상태 UI
+══════════════════════════════════════════════ */
+function setProgress(pct, label, detail) {
+  var p = Math.max(0, Math.min(100, pct));
+  document.getElementById('progress-bar').style.width = p + '%';
+  document.getElementById('progress-pct').textContent = Math.round(p) + '%';
+  if (label  != null) document.getElementById('progress-label-text').textContent = label;
+  if (detail != null) document.getElementById('progress-detail').textContent = detail || '\u00a0';
+}
+
+function stopSpinner() {
+  document.getElementById('progress-spinner').style.display = 'none';
+}
+
+/* ══════════════════════════════════════════════
+   에러 표시
+══════════════════════════════════════════════ */
+function showError(title, msg) {
+  document.getElementById('error-title-text').textContent = title;
+  document.getElementById('error-msg-text').textContent   = msg;
+  document.getElementById('error-box').style.display = 'block';
+  showToast('error', title, msg.slice(0, 180));
+}
+function hideError() {
+  document.getElementById('error-box').style.display = 'none';
+}
+
+/* ══════════════════════════════════════════════
+   토스트
+══════════════════════════════════════════════ */
+function showToast(type, title, msg, duration) {
+  if (duration === undefined) duration = 5500;
+  var icons = { error: '⚠️', success: '✅', info: 'ℹ️', warn: '⚡' };
+  var container = document.getElementById('toast-container');
+  var t = document.createElement('div');
+  t.className = 'toast ' + type;
+  t.innerHTML =
+    '<div class="toast-icon">' + (icons[type] || 'ℹ️') + '</div>' +
+    '<div class="toast-body">' +
+      '<div class="toast-title">' + esc(title) + '</div>' +
+      '<div class="toast-msg">'   + esc(msg)   + '</div>' +
+    '</div>' +
+    '<button class="toast-close" onclick="this.parentElement.remove()">✕</button>';
+  container.appendChild(t);
+  if (duration > 0) {
+    setTimeout(function() {
+      t.style.opacity = '0';
+      t.style.transform = 'translateY(8px)';
+      t.style.transition = 'opacity 0.3s, transform 0.3s';
+      setTimeout(function() { if (t.parentElement) t.remove(); }, 320);
+    }, duration);
+  }
+}
+
+/* ══════════════════════════════════════════════
    메인: 보드 조회
 ══════════════════════════════════════════════ */
 async function fetchBoards() {
   if (isFetching) return;
 
-  const apiKey   = document.getElementById('api-key').value.trim();
-  const useProxy = document.getElementById('use-proxy').checked;
-  const apiInput = document.getElementById('api-key');
+  var apiKey   = document.getElementById('api-key').value.trim();
+  var useProxy = document.getElementById('use-proxy').checked;
+  var apiInput = document.getElementById('api-key');
 
-  // ── 유효성 검사 ──
   if (!apiKey) {
     apiInput.classList.add('input-error');
     apiInput.focus();
@@ -1075,71 +1097,94 @@ async function fetchBoards() {
   apiInput.classList.remove('input-error');
 
   isFetching = true;
+  debugLog   = [];
   hideError();
 
-  // ── UI 초기화 ──
-  document.getElementById('btn-fetch').disabled          = true;
-  document.getElementById('btn-excel').disabled          = true;
-  document.getElementById('btn-reset').style.display     = 'none';
-  document.getElementById('progress-section').style.display = 'block';
-  document.getElementById('summary-section').style.display  = 'none';
-  document.getElementById('table-section').style.display    = 'none';
-  document.getElementById('progress-spinner').style.display = '';
-  document.getElementById('table-body').innerHTML = '';
+  document.getElementById('btn-fetch').disabled              = true;
+  document.getElementById('btn-excel').disabled              = true;
+  document.getElementById('btn-reset').style.display         = 'none';
+  document.getElementById('progress-section').style.display  = 'block';
+  document.getElementById('summary-section').style.display   = 'none';
+  document.getElementById('table-section').style.display     = 'none';
+  document.getElementById('debug-section').style.display     = 'none';
+  document.getElementById('progress-spinner').style.display  = '';
+  document.getElementById('table-body').innerHTML            = '';
   boardData = [];
 
   try {
-    /* ── Step 1: 전체 보드 목록 조회 ── */
+    /* ── Step 1: GET /v1/me?include=boards ── */
     setProgress(5, '패들렛 보드 목록을 불러오는 중...', '');
 
-    let meData;
+    var meData;
     try {
       meData = await apiFetch('/me?include=boards', apiKey, useProxy);
-    } catch (e) {
+    } catch(e) {
       throw new Error('보드 목록 조회 실패\n' + e.message);
     }
 
-    const boards = extractBoards(meData);
+    addDebug('/me?include=boards 응답 전체', meData);
+
+    var boards = extractBoards(meData);
 
     if (boards.length === 0) {
-      setProgress(100, '조회 완료', '');
-      setProgressDone();
+      setProgress(100, '조회 완료', '보드를 찾을 수 없습니다.');
+      stopSpinner();
       renderTable([]);
       renderSummary([]);
-      document.getElementById('table-section').style.display = 'block';
-      showToast('info', '보드 없음', '연결된 패들렛 보드가 없습니다.');
-      document.getElementById('btn-reset').style.display = 'inline-flex';
+      document.getElementById('btn-reset').style.display     = 'inline-flex';
+      document.getElementById('debug-section').style.display = 'block';
+      document.getElementById('debug-content').textContent   =
+        '=== /me?include=boards 응답 ===\n' + JSON.stringify(meData, null, 2);
+      showToast('warn', '보드를 찾을 수 없음',
+        '보드 목록이 비어있습니다. 디버그 패널에서 API 응답을 확인해주세요.\n' +
+        '유료 구독 계정인지, API 키가 올바른지 확인해주세요.', 0);
       return;
     }
 
-    const total = boards.length;
+    var total = boards.length;
     setProgress(10,
       total + '개의 보드를 발견했습니다. 상세 데이터를 분석 중...',
-      '총 ' + total + '개 보드 발견 — 게시글 및 댓글 수 집계 시작'
+      '총 ' + total + '개 보드 발견'
     );
 
-    /* ── Step 2: 각 보드 상세 조회 (배치 병렬 처리) ── */
-    const BATCH = 8;  // 동시 요청 수 제한
-    let completed = 0;
-    const results = new Array(total);
+    /* ── Step 2: GET /v1/boards/{id}?include=posts,sections,comments ──
+       공식 문서: board_id는 16~22자의 문자열
+       병렬 처리: 6개씩 배치
+    */
+    var BATCH = 6;
+    var completed = 0;
+    var results = new Array(total);
 
-    for (let i = 0; i < total; i += BATCH) {
-      const slice = boards.slice(i, i + BATCH);
+    for (var i = 0; i < total; i += BATCH) {
+      var slice = boards.slice(i, i + BATCH);
 
       await Promise.all(slice.map(async function(board, bi) {
-        const idx = i + bi;
+        var idx     = i + bi;
+        var boardId = board.id;
+
+        if (!boardId) {
+          results[idx] = { board: board, detail: null, error: 'board_id 없음' };
+          completed++;
+          return;
+        }
+
         try {
-          const detail = await apiFetch(
-            '/boards/' + board.id + '?include=posts,comments',
+          var detail = await apiFetch(
+            '/boards/' + boardId + '?include=posts,sections,comments',
             apiKey, useProxy
           );
           results[idx] = { board: board, detail: detail, error: null };
-        } catch (e) {
+
+          /* 첫 번째 보드만 디버그 기록 */
+          if (idx === 0) {
+            addDebug('/boards/' + boardId + ' 응답 (첫 번째)', detail);
+          }
+        } catch(e) {
           results[idx] = { board: board, detail: null, error: e.message };
         } finally {
           completed++;
-          const pct  = 10 + (completed / total) * 85;
-          const pctR = Math.round((completed / total) * 100);
+          var pct  = 10 + (completed / total) * 85;
+          var pctR = Math.round((completed / total) * 100);
           setProgress(
             pct,
             total + '개의 패들렛 보드에서 게시글 및 댓글을 분석 중입니다...',
@@ -1153,52 +1198,73 @@ async function fetchBoards() {
     setProgress(97, '데이터를 정리하는 중...', '');
 
     boardData = results.map(function(r, idx) {
-      const board = r.board;
-      const attr  = board.attributes || {};
-      const counts = extractCounts(r.detail);
+      var board = r.board;
+      var attr  = board.attributes || {};
+      var counts = extractCounts(r.detail);
+
+      /* 날짜: 상세 응답 우선, 없으면 목록 응답 사용 */
+      var detailAttr = (r.detail && r.detail.data && r.detail.data.attributes)
+                       ? r.detail.data.attributes : {};
+      var createdAt = detailAttr.created_at || attr.created_at || attr.created || null;
+      var updatedAt = detailAttr.updated_at || attr.updated_at || attr.updated || null;
+      var title     = detailAttr.title || attr.title || attr.name || '(제목 없음) #' + board.id;
+      var boardUrl  = detailAttr.url || detailAttr.web_url || extractBoardUrl(board);
 
       return {
         idx:        idx + 1,
         id:         board.id,
-        title:      attr.title || attr.name || '(제목 없음) #' + board.id,
-        created_at: attr.created_at || attr.created || null,
-        updated_at: attr.updated_at || attr.updated || null,
+        title:      title,
+        created_at: createdAt,
+        updated_at: updatedAt,
         posts:      counts.postCount,
         comments:   counts.commentCount,
-        url:        extractBoardUrl(board),
+        url:        boardUrl,
         error:      r.error,
       };
     });
 
     setProgress(100, '분석 완료!', '총 ' + total + '개 보드 분석 완료');
-    setProgressDone();
+    stopSpinner();
 
-    // 기본 정렬: 마지막 수정일 내림차순
     sortCol = 'updated_at';
     sortDir = 'desc';
-
     renderTable(getSorted(boardData));
     renderSummary(boardData);
 
     document.getElementById('btn-excel').disabled      = false;
     document.getElementById('btn-reset').style.display = 'inline-flex';
 
-    const errCount = boardData.filter(function(b) { return b.error; }).length;
-    if (errCount > 0) {
-      showToast('warn', '일부 보드 오류',
-        total + '개 중 ' + errCount + '개 보드에서 상세 조회 오류가 발생했습니다. 해당 보드는 ⚠ 표시됩니다.',
-        7000
-      );
-    } else {
-      showToast('success', '조회 완료',
-        total + '개 보드의 데이터를 성공적으로 분석했습니다.');
+    if (document.getElementById('show-debug').checked) {
+      document.getElementById('debug-section').style.display = 'block';
+      document.getElementById('debug-content').textContent =
+        debugLog.map(function(d) {
+          return '=== ' + d.label + ' ===\n' + JSON.stringify(d.data, null, 2);
+        }).join('\n\n');
     }
 
-  } catch (err) {
+    var errCount = boardData.filter(function(b) { return b.error; }).length;
+    if (errCount > 0) {
+      showToast('warn', '일부 보드 오류',
+        total + '개 중 ' + errCount + '개 보드에서 오류 발생 (주로 Admin 권한 없는 보드의 404 오류). 해당 보드는 ⚠ 표시됩니다.',
+        9000
+      );
+    } else {
+      showToast('success', '조회 완료', total + '개 보드 분석이 완료되었습니다.');
+    }
+
+  } catch(err) {
     setProgress(0, '오류 발생', '');
-    setProgressDone();
+    stopSpinner();
     showError('데이터 조회 중 오류 발생', err.message);
     document.getElementById('btn-reset').style.display = 'inline-flex';
+
+    if (debugLog.length > 0) {
+      document.getElementById('debug-section').style.display = 'block';
+      document.getElementById('debug-content').textContent =
+        debugLog.map(function(d) {
+          return '=== ' + d.label + ' ===\n' + JSON.stringify(d.data, null, 2);
+        }).join('\n\n');
+    }
   } finally {
     isFetching = false;
     document.getElementById('btn-fetch').disabled = false;
@@ -1211,22 +1277,16 @@ async function fetchBoards() {
 function getSorted(data) {
   return data.slice().sort(function(a, b) {
     var va = a[sortCol], vb = b[sortCol];
-
     if (va == null && vb == null) return 0;
     if (va == null) return 1;
     if (vb == null) return -1;
-
     if (sortCol === 'created_at' || sortCol === 'updated_at') {
       va = new Date(va).getTime() || 0;
       vb = new Date(vb).getTime() || 0;
     }
-
     if (typeof va === 'string' && typeof vb === 'string') {
-      return sortDir === 'asc'
-        ? va.localeCompare(vb, 'ko')
-        : vb.localeCompare(va, 'ko');
+      return sortDir === 'asc' ? va.localeCompare(vb, 'ko') : vb.localeCompare(va, 'ko');
     }
-
     return sortDir === 'asc' ? va - vb : vb - va;
   });
 }
@@ -1240,19 +1300,15 @@ function sortTable(col) {
   }
   updateSortIcons();
   renderRows(getSorted(boardData));
-
   var badge = document.getElementById('sort-badge');
   badge.style.display = 'inline-flex';
-  badge.textContent   = colLabel(col) + ' ' + (sortDir === 'asc' ? '▲ 오름차순' : '▼ 내림차순');
+  badge.textContent = colLabel(col) + ' ' + (sortDir === 'asc' ? '▲ 오름차순' : '▼ 내림차순');
 }
 
 function colLabel(col) {
   var map = {
-    title:      '보드 제목',
-    created_at: '생성일',
-    updated_at: '수정일',
-    posts:      '게시글 수',
-    comments:   '댓글 수',
+    title: '보드 제목', created_at: '생성일',
+    updated_at: '수정일', posts: '게시글 수', comments: '댓글 수'
   };
   return map[col] || col;
 }
@@ -1280,22 +1336,18 @@ function renderTable(data) {
   document.getElementById('total-count').textContent     = data.length;
   updateSortIcons();
   renderRows(data);
-
-  // 정렬 배지 초기 표시
   var badge = document.getElementById('sort-badge');
   badge.style.display = 'inline-flex';
-  badge.textContent   = colLabel(sortCol) + ' ' + (sortDir === 'asc' ? '▲ 오름차순' : '▼ 내림차순');
+  badge.textContent = colLabel(sortCol) + ' ' + (sortDir === 'asc' ? '▲ 오름차순' : '▼ 내림차순');
 }
 
 function renderRows(data) {
   var tbody = document.getElementById('table-body');
-
   if (!data || data.length === 0) {
     tbody.innerHTML =
       '<tr><td colspan="7"><div class="empty-state">' +
       '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>' +
-      '<p>표시할 데이터가 없습니다.</p>' +
-      '</div></td></tr>';
+      '<p>표시할 데이터가 없습니다.</p></div></td></tr>';
     return;
   }
 
@@ -1304,7 +1356,6 @@ function renderRows(data) {
     var errBadge = row.error
       ? '<span class="err-badge" title="' + esc(row.error) + '">⚠ 오류</span>'
       : '';
-
     html +=
       '<tr>' +
         '<td class="col-num">' + (i + 1) + '</td>' +
@@ -1332,21 +1383,18 @@ function renderRows(data) {
 ══════════════════════════════════════════════ */
 function renderSummary(data) {
   document.getElementById('summary-section').style.display = 'block';
-
   var total    = data.length;
   var totPosts = data.reduce(function(s, r) { return s + (r.posts || 0); }, 0);
   var totCmt   = data.reduce(function(s, r) { return s + (r.comments || 0); }, 0);
   var avgPosts = total ? Math.round(totPosts / total) : 0;
-
-  var latest = data.slice().sort(function(a, b) {
+  var latest   = data.slice().sort(function(a, b) {
     var ta = a.updated_at ? new Date(a.updated_at).getTime() : 0;
     var tb = b.updated_at ? new Date(b.updated_at).getTime() : 0;
     return tb - ta;
   })[0];
-
-  document.getElementById('stat-boards').textContent   = total.toLocaleString('ko-KR');
-  document.getElementById('stat-posts').textContent    = totPosts.toLocaleString('ko-KR');
-  document.getElementById('stat-comments').textContent = totCmt.toLocaleString('ko-KR');
+  document.getElementById('stat-boards').textContent    = total.toLocaleString('ko-KR');
+  document.getElementById('stat-posts').textContent     = totPosts.toLocaleString('ko-KR');
+  document.getElementById('stat-comments').textContent  = totCmt.toLocaleString('ko-KR');
   document.getElementById('stat-avg-posts').textContent = avgPosts.toLocaleString('ko-KR');
   document.getElementById('stat-last-date').textContent =
     (latest && latest.updated_at) ? fmtDate(latest.updated_at).split(' ')[0] : '—';
@@ -1361,52 +1409,35 @@ function downloadExcel() {
     return;
   }
   if (typeof XLSX === 'undefined') {
-    showToast('error', 'SheetJS 로드 실패',
-      'SheetJS 라이브러리를 불러오지 못했습니다. 인터넷 연결을 확인해주세요.');
+    showToast('error', 'SheetJS 로드 실패', 'SheetJS 라이브러리를 불러오지 못했습니다. 인터넷 연결을 확인해주세요.');
     return;
   }
-
   try {
-    const sorted = getSorted(boardData);
-
-    // 헤더 + 데이터 행
-    const wsData = [
+    var sorted = getSorted(boardData);
+    var wsData = [
       ['번호', '보드 제목', '최초 생성일', '마지막 수정일', '게시글 수', '댓글 수', '바로가기 URL'],
     ].concat(sorted.map(function(r, i) {
       return [
         i + 1,
-        r.title || '',
+        r.title    || '',
         r.created_at ? fmtDate(r.created_at) : '',
         r.updated_at ? fmtDate(r.updated_at) : '',
         r.posts    != null ? r.posts    : 0,
         r.comments != null ? r.comments : 0,
-        r.url || '',
+        r.url      || '',
       ];
     }));
-
-    const wb = XLSX.utils.book_new();
-    const ws = XLSX.utils.aoa_to_sheet(wsData);
-
-    // 열 너비
+    var wb = XLSX.utils.book_new();
+    var ws = XLSX.utils.aoa_to_sheet(wsData);
     ws['!cols'] = [
-      { wch: 6  },
-      { wch: 42 },
-      { wch: 20 },
-      { wch: 20 },
-      { wch: 12 },
-      { wch: 12 },
-      { wch: 55 },
+      { wch: 6 }, { wch: 42 }, { wch: 20 }, { wch: 20 },
+      { wch: 12 }, { wch: 12 }, { wch: 55 },
     ];
-
-    // 헤더 행 스타일 (SheetJS CE에서 지원 범위 내)
     XLSX.utils.book_append_sheet(wb, ws, '패들렛 보드 현황');
-
-    const fileName = '패들렛_보드_현황_목록_' + fmtDateFile(new Date()) + '.xlsx';
+    var fileName = '패들렛_보드_현황_목록_' + fmtDateFile(new Date()) + '.xlsx';
     XLSX.writeFile(wb, fileName);
-
-    showToast('success', '엑셀 다운로드 완료',
-      fileName + ' 파일이 저장되었습니다. (' + sorted.length + '개 보드)');
-  } catch (e) {
+    showToast('success', '엑셀 다운로드 완료', fileName + ' (' + sorted.length + '개 보드)');
+  } catch(e) {
     showToast('error', '엑셀 생성 오류', e.message);
   }
 }
@@ -1419,10 +1450,11 @@ function resetAll() {
   sortCol    = 'updated_at';
   sortDir    = 'desc';
   isFetching = false;
-
+  debugLog   = [];
   document.getElementById('progress-section').style.display = 'none';
   document.getElementById('summary-section').style.display  = 'none';
   document.getElementById('table-section').style.display    = 'none';
+  document.getElementById('debug-section').style.display    = 'none';
   document.getElementById('btn-excel').disabled             = true;
   document.getElementById('btn-reset').style.display        = 'none';
   document.getElementById('progress-spinner').style.display = '';
@@ -1436,21 +1468,29 @@ function resetAll() {
 /* ══════════════════════════════════════════════
    이벤트 리스너
 ══════════════════════════════════════════════ */
-
-// API 키 표시 토글
 document.getElementById('show-key').addEventListener('change', function() {
   document.getElementById('api-key').type = this.checked ? 'text' : 'password';
 });
 
-// Enter 키로 조회
 document.getElementById('api-key').addEventListener('keydown', function(e) {
   if (e.key === 'Enter') fetchBoards();
 });
 
-// 입력 시 에러 스타일 제거
 document.getElementById('api-key').addEventListener('input', function() {
   this.classList.remove('input-error');
   hideError();
+});
+
+document.getElementById('show-debug').addEventListener('change', function() {
+  if (this.checked && debugLog.length > 0) {
+    document.getElementById('debug-section').style.display = 'block';
+    document.getElementById('debug-content').textContent =
+      debugLog.map(function(d) {
+        return '=== ' + d.label + ' ===\n' + JSON.stringify(d.data, null, 2);
+      }).join('\n\n');
+  } else {
+    document.getElementById('debug-section').style.display = 'none';
+  }
 });
 </script>
 </body>
